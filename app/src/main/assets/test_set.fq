@@ -1,0 +1,116 @@
+<flashcards authoremail="" license="" author="" comment="" writerversion="3" flashqardversion="0.15.0" >
+ <box name="test_set" >
+  <stack>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>b_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>b_translate</html>
+    </translationdocument>
+    <examples>b_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>b_word type_other</userdefinedwordtype>
+    <comments>b_comment1</comments>
+    <synonyms>b_syn1, b_syn2</synonyms>
+    <antonyms>b_ant1</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+    </statistics>
+   </card>
+  </stack>
+  <stage>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>f_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>f_translate&lt;div>this is a translate :) ,&amp;nbsp;&lt;/div></html>
+    </translationdocument>
+    <examples>f_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>f_word type_other</userdefinedwordtype>
+    <comments>f_comment1</comments>
+    <synonyms>f_syn1, f_syn2</synonyms>
+    <antonyms>f_ant1, f_ant2, f_ant3, fant4</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>a_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>a_translate</html>
+    </translationdocument>
+    <examples>a_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>a_word type_other</userdefinedwordtype>
+    <comments>a_comment1</comments>
+    <synonyms>a_syn1, a_syn2</synonyms>
+    <antonyms>a_ant1</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+    </statistics>
+   </card>
+  </stage>
+  <stage>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>c_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>c_translate</html>
+    </translationdocument>
+    <examples>c_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>c_word type_other</userdefinedwordtype>
+    <comments>c_comment1</comments>
+    <synonyms>c_syn1, c_syn2</synonyms>
+    <antonyms>c_ant1</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+    </statistics>
+   </card>
+  </stage>
+  <stage>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>d_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>d_translate</html>
+    </translationdocument>
+    <examples>d_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>d_word type_other</userdefinedwordtype>
+    <comments>d_comment1</comments>
+    <synonyms>d_syn1, d_syn2</synonyms>
+    <antonyms>d_ant1</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+    </statistics>
+   </card>
+  </stage>
+  <stage>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>e_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>e_translate</html>
+    </translationdocument>
+    <examples>e_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>e_word type_other</userdefinedwordtype>
+    <comments>e_comment1</comments>
+    <synonyms>e_syn1, e_syn2</synonyms>
+    <antonyms>e_ant1</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+    </statistics>
+   </card>
+  </stage>
+ </box>
+</flashcards>
