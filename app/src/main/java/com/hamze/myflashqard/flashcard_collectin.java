@@ -4,6 +4,7 @@
 
 package com.hamze.myflashqard;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
 
@@ -60,11 +61,14 @@ public class flashcard_collectin {
 
     private stage[] stage_list; // each stage includes a list of cards
 
+    // variable to hold context
+    private Context outer_context;
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // Constructor
-    flashcard_collectin() {
+    flashcard_collectin(Context context) {
         authoremail = "";
         license = "";
         author = "";
@@ -81,15 +85,19 @@ public class flashcard_collectin {
             stage_list[i] = new stage();
         }
 
+        outer_context = context;
+
     }// constructor
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // read XML file into flash card array
-    public boolean Read_file_to_array(String fpath, AssetManager as_mng, String error_msg) {
+    public boolean Read_file_to_array(String fpath, error error_obj) {
 
+        IsOpen = false;
         file_path = fpath;
+        AssetManager asset_mng = outer_context.getAssets();
 
         //XML file parser
         XmlPullParserFactory factory;
@@ -100,12 +108,12 @@ public class flashcard_collectin {
             xpp = factory.newPullParser();
         } catch (XmlPullParserException e) {
             e.printStackTrace();
+            error_obj.set_error_code(10);
             return false;
         }
 
 
-        InputStream in_st = null;
-        String indent = "";
+        InputStream inp_strm = null;
         int card_cnt = 0;
         String last_att_val = "";
         int stage_counter = -1;
@@ -114,16 +122,14 @@ public class flashcard_collectin {
 
         try {
 
-            in_st = as_mng.open(file_path);
-            xpp.setInput(in_st, null);
+            inp_strm = asset_mng.open(file_path);
+            xpp.setInput(inp_strm, null);
             int eventType = xpp.getEventType();
 
             //main parsing loop
             while (eventType != XmlPullParser.END_DOCUMENT) {
 
                 if (eventType == XmlPullParser.START_DOCUMENT) {
-                    //Log.d("hamze_tag", "Start document"); //System.out.println("Start document");
-
                 } else if (eventType == XmlPullParser.START_TAG) {
                     tag_stack.push(xpp.getName()); //push latest open tag into stack
 
@@ -158,7 +164,7 @@ public class flashcard_collectin {
                                 stage_list[0].stage_type = 0; //0: stack type
                             } else {
                                 //error: just one stack should exist
-                                error_msg = "more than 1 stack";
+                                error_obj.set_error_code(6);
                                 return false;
                             }
 
@@ -172,7 +178,7 @@ public class flashcard_collectin {
                         case TG_CARD: //card
                             first_lang = true;
                             if (!xpp.getAttributeValue(0).equals(ATTR_VOC)) {
-                                error_msg = "unknown " + TG_CARD + " type" + String.valueOf(card_cnt);
+                                error_obj.set_error_code(7, card_cnt);//invalid card is card number card_cnt
                                 return false;
                             }
                             stage_list[stage_counter].cards.add(new vocabulary_card());
@@ -188,13 +194,8 @@ public class flashcard_collectin {
                         last_att_val = xpp.getAttributeValue(0);
                     }
 
-                    //Log.d("hamze_tag", indent+"Start tag "+xpp.getName()+ " " + String.valueOf(xpp.getAttributeCount()) );
-                    //indent = indent + "   "; // add one space
-
 
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    //indent = indent.substring(0, indent.length()-3); //remove on space
-                    //Log.d("hamze_tag", indent+"End tag "+xpp.getName());
 
                     if (xpp.getName().equals(TG_CARD)) {
                         card_cnt++;
@@ -203,8 +204,6 @@ public class flashcard_collectin {
                     tag_stack.pop(); //remove last open tag
 
                 } else if (eventType == XmlPullParser.TEXT) {
-                    // if (xpp.getText().trim().length() > 0 ) //text is not white space
-                    //     Log.d("hamze_tag", indent+"Text: "+ xpp.getText().trim() );
 
                     switch (tag_stack.peek()) { //check last open tag to see TEXT belongs to whome
                         case TG_CARD: //card
@@ -267,26 +266,19 @@ public class flashcard_collectin {
                 eventType = xpp.next(); //read next XML token from XML file.
 
             }//while
-
-            //Log.d("hamze_tag", "End document");
-
             total_card_num = card_cnt;
 
-
-            //Log.d("hamze_tag", "card count" + String.valueOf(total_card_num) );
-
-
             //close the files
-            in_st.close();
-            as_mng.close();
+            inp_strm.close();
 
+            
         } catch (IOException e) {
             e.printStackTrace();
-            error_msg = "File Not Found";
+            error_obj.set_error_code(8); //"File Not Found";
             return false;
         } catch (XmlPullParserException e) {
             e.printStackTrace();
-            error_msg = "XML parser error";
+            error_obj.set_error_code(9);
             return false;
         }
 
@@ -299,22 +291,22 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // write flashcard array into XML file
-    public boolean Write_array_2_file(String error_msg) {
+    public boolean Write_array_2_file(error error_obj) {
 
         //flash card should be opened first
         if (!IsOpen) {
-            error_msg = "No flashcard open";
+            error_obj.set_error_code(1);
             return false;
         }
 
         if (file_path.equals("")) {
-            error_msg = "No file path to save!";
+            error_obj.set_error_code(2);
             return false;
         }
 
         String storage_state = Environment.getExternalStorageState();
         if (!storage_state.equals("mounted")) {
-            error_msg = "Ex-Storage not mounted!";
+            error_obj.set_error_code(3);
             return false;
         }
 
@@ -327,7 +319,7 @@ public class flashcard_collectin {
         File fq_folder = new File(storage_root_path, "Flashqard"); //path of new folder on root directory
         if (!fq_folder.exists()) {
             if (!fq_folder.mkdirs()) {// this will create folder.
-                error_msg = "Program folder not created. No write permission";
+                error_obj.set_error_code(4); // "Program folder not created. No storage permission"
                 return false;
             }
         }
@@ -417,7 +409,7 @@ public class flashcard_collectin {
 
         } catch (IOException e) {
             e.printStackTrace();
-            error_msg = "check write permission!";
+            error_obj.set_error_code(5); // "Check storage permission to External memory!";
             return false;
         }
 
