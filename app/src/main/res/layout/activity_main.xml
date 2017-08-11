@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.hamze.myflashqard.MainActivity">
+    tools:context="com.hamze.myflashqard.MainActivity"
+    android:baselineAligned="false">
+
 
     <FrameLayout
         android:id="@+id/content"
@@ -14,13 +16,14 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <EditText
                     android:id="@+id/Error_indicator"
@@ -50,12 +53,23 @@
                     android:layout_height="wrap_content"
                     android:text="Open Flashcard" />
 
+                <ProgressBar
+                    android:id="@+id/progressBar_open"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:max="100"
+                    android:progress="0"
+                    android:visibility="invisible" />
+
+
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/editText4"
@@ -102,24 +116,33 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/button_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Save FLASHCARD" />
+                    android:enabled="false"
+                    android:text="Save and Close" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar_save"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="invisible" />
             </TableRow>
 
         </TableLayout>
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation" />
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/windowBackground"
+                app:menu="@menu/navigation" />
 
-</LinearLayout>
+        </LinearLayout>

@@ -25,7 +25,7 @@ public class error {
         error_description[8] = "File Not Found";
         error_description[9] = "XML parser error";
         error_description[10] = "XML parser can not initialize";
-        error_description[11] = "";
+        error_description[11] = "already open. close it first!";
         error_description[12] = "";
         error_description[13] = "";
         error_description[14] = "";

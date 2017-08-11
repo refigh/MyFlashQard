@@ -7,6 +7,7 @@ package com.hamze.myflashqard;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -59,6 +60,7 @@ public class flashcard_collectin {
     public String box_name;
     public int total_card_num;
 
+
     private stage[] stage_list; // each stage includes a list of cards
 
     // variable to hold context
@@ -92,10 +94,15 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // read XML file into flash card array
-    public boolean Read_file_to_array(String fpath, error error_obj) {
+    // read XML file into flash card object
+    public boolean Read_fq_from_file(String fpath, error error_obj) {
 
-        IsOpen = false;
+        if (IsOpen) { // already open. should be closed first.
+            error_obj.set_error_code(11);
+            return false;
+        }
+
+
         file_path = fpath;
         AssetManager asset_mng = outer_context.getAssets();
 
@@ -271,7 +278,7 @@ public class flashcard_collectin {
             //close the files
             inp_strm.close();
 
-            
+
         } catch (IOException e) {
             e.printStackTrace();
             error_obj.set_error_code(8); //"File Not Found";
@@ -290,8 +297,8 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // write flashcard array into XML file
-    public boolean Write_array_2_file(error error_obj) {
+    // write flashcard object into XML file
+    public boolean Write_fq_to_file(error error_obj) {
 
         //flash card should be opened first
         if (!IsOpen) {
@@ -454,6 +461,32 @@ public class flashcard_collectin {
 
         return true;
     }// Check_integrity
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //clear data and close the open flashcard
+    public void close() {
+        authoremail = "";
+        license = "";
+        author = "";
+        comment = "";
+        writerversion = "";
+        flashqardversion = "";
+        box_name = "";
+        total_card_num = 0;
+        IsOpen = false;
+        file_path = "";
+
+        for (int i = 0; i < MAX_STAGE_NUM; i++) {
+            stage_list[i].stage_type = -1; //inactive
+            stage_list[i].cards.clear(); // clear the link list in each stage
+        }
+
+
+        return;
+    }// close
 
 
 }
