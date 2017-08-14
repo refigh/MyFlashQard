@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
     private Button button_save;
     private Button button_open;
     private Button button_reset;
+    private Button button_start;
     private Button[] all_buttons; //initiate it after initiation of above buttons
     private Boolean[] all_buttons_enable_status;
 
@@ -93,8 +94,14 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         button_reset = (Button) findViewById(R.id.button_reset);
         button_reset.setOnClickListener(button_reset_OnClickListener);
 
+
+        //start flashcard button
+        button_start = (Button) findViewById(R.id.button_start);
+        button_start.setOnClickListener(button_start_OnClickListener);
+
+
         //all buttons
-        all_buttons = new Button[]{button_save, button_open, button_reset};
+        all_buttons = new Button[]{button_save, button_open, button_reset, button_start};
         all_buttons_enable_status = new Boolean[all_buttons.length];
         for (Boolean b : all_buttons_enable_status)
             b = false;
@@ -144,6 +151,7 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
             //Dialog for selecting one file
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
             mBuilder.setTitle("Select one");
+            mBuilder.setIcon(android.R.drawable.arrow_up_float);
             mBuilder.setItems(fq_names, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -205,6 +213,21 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
         } //onClick
     }; //button_reset_OnClickListener
+
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for button_start
+    final View.OnClickListener button_start_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+
+        } //onClick
+    }; //button_start_OnClickListener
+
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -329,6 +352,7 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
                 editText_flashcard_name.setText(my_fc_col.box_name);
                 button_save.setEnabled(true);
                 button_reset.setEnabled(true);
+                button_start.setEnabled(true);
             } else {
                 error_dialog(error_obj);
                 load_interface_enable_status(); //allow opening again. because the last opening was not successful.
