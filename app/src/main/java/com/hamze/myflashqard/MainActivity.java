@@ -3,16 +3,14 @@ package com.hamze.myflashqard;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
     private error error_obj = new error();
 
     //define an empty flashcard collection. this is the main data structure which the file will be read in to it.
-    private flashcard_collectin my_fc_col = new flashcard_collectin(this);
+    private flashcard_collectin my_fc_col = new flashcard_collectin(MainActivity.this);
 
 
     private ProgressBar progressBar_open;
@@ -45,29 +43,6 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
     private int count = 1;
 
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    //mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    //mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    //mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-
-    };
 
 
     //----------------------------------------------------------------------------------------
@@ -77,10 +52,6 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // mTextMessage = (TextView) findViewById(R.id.editText3 );
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //open flashcard button
         button_open = (Button) findViewById(R.id.button_open);
@@ -224,6 +195,8 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         @Override
         public void onClick(final View v) {
 
+            Intent study_act = new Intent(MainActivity.this, StudyActivity.class);
+            startActivity(study_act);
 
         } //onClick
     }; //button_start_OnClickListener
