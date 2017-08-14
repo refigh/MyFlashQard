@@ -22,13 +22,14 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
 
     private TextView editText_wordcnt;
-    private TextView editText_Error_indicator;
     private TextView editText_flashcard_name;
 
     //buttons
     private Button button_save;
     private Button button_open;
-
+    private Button button_reset;
+    private Button[] all_buttons; //initiate it after initiation of above buttons
+    private Boolean[] all_buttons_enable_status;
 
     // Error code holder
     private error error_obj = new error();
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
     private ProgressBar progressBar_open;
     private ProgressBar progressBar_save;
+    private ProgressBar progressBar_reset;
 
     private int count = 1;
 
@@ -87,14 +89,24 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         button_save = (Button) findViewById(R.id.button_save);
         button_save.setOnClickListener(button_save_OnClickListener);
 
+        //reset flashcard button
+        button_reset = (Button) findViewById(R.id.button_reset);
+        button_reset.setOnClickListener(button_reset_OnClickListener);
+
+        //all buttons
+        all_buttons = new Button[]{button_save, button_open, button_reset};
+        all_buttons_enable_status = new Boolean[all_buttons.length];
+        for (Boolean b : all_buttons_enable_status)
+            b = false;
+
         editText_wordcnt = (TextView) findViewById(R.id.editText_wordcnt);
-        editText_Error_indicator = (TextView) findViewById(R.id.editText_Error_indicator);
         editText_flashcard_name = (TextView) findViewById(R.id.editText_flashcard_name);
 
 
         //Open and Save flashcard progress bar
         progressBar_open = (ProgressBar) findViewById(R.id.progressBar_open);
         progressBar_save = (ProgressBar) findViewById(R.id.progressBar_save);
+        progressBar_reset = (ProgressBar) findViewById(R.id.progressBar_reset);
 
 
         // request for application permission at run time.
@@ -113,6 +125,14 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         @Override
         public void onClick(final View v) {
 
+            final CharSequence fq_names[] = new CharSequence[]{
+                    "English",
+                    "Turkish",
+                    "Test1",
+                    "Test2",
+                    "NoExist"
+            };
+
             final CharSequence fq_files[] = new CharSequence[]{
                     "english_vocab.fq",
                     "turkish.fq",
@@ -124,7 +144,7 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
             //Dialog for selecting one file
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
             mBuilder.setTitle("Select one");
-            mBuilder.setItems(fq_files, new DialogInterface.OnClickListener() {
+            mBuilder.setItems(fq_names, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // the user clicked on fq_files [which]
@@ -160,13 +180,41 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
 
     //----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for reset_save
+    final View.OnClickListener button_reset_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+            //show a confirmation dialog before run.
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Reset data")
+                    .setMessage("Do you really want to reset this flashcard?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //run a AsyncTask (a kind of thread) for fq reseting. Because it takes some seconds.
+                            // it includes delete of file, and re-open the flash file
+                            ReseterTaskClass my_reseter_task = new ReseterTaskClass();
+                            my_reseter_task.execute(0); // execute(Params...)
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null).show();
+
+        } //onClick
+    }; //button_reset_OnClickListener
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     private void error_dialog(error error_obj) {
 
         //Dialog for error information
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
         mBuilder.setTitle("Error!");
+        mBuilder.setIcon(android.R.drawable.ic_dialog_alert);
         mBuilder.setMessage("Error code " + String.valueOf(error_obj.get_error_code()) + ": " + error_obj.get_error_description());
         //mBuilder.setView(); //good tutorial : https://www.youtube.com/watch?v=plnLs6aST1M
         AlertDialog dialog = mBuilder.create();
@@ -176,8 +224,8 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
 
     //----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     private void permission_request() {
 
         int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
@@ -217,18 +265,41 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
 
     //----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-// read below two sources to learn how to use AsyncTask for background jobs with progress report
-//  1-https://developer.android.com/reference/android/os/AsyncTask.html
-//  2-http://www.concretepage.com/android/android-asynctask-example-with-progress-bar
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    private void disable_interface() {
+        for (Button b : all_buttons)
+            b.setEnabled(false);
+        return;
+    } //disable_interface
+
+    private void save_interface_enable_status() {
+        for (int i = 0; i < all_buttons.length; i++)
+            all_buttons_enable_status[i] = all_buttons[i].isEnabled();
+        return;
+    } //save interface
+
+    private void load_interface_enable_status() {
+        for (int i = 0; i < all_buttons.length; i++)
+            all_buttons[i].setEnabled(all_buttons_enable_status[i]);
+        return;
+    } //load interface
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // read below two sources to learn how to use AsyncTask for background jobs with progress report
+    //  1-https://developer.android.com/reference/android/os/AsyncTask.html
+    //  2-http://www.concretepage.com/android/android-asynctask-example-with-progress-bar
     class OpenerTaskClass extends AsyncTask<String, Integer, Boolean> { //params, progress, result
 
         @Override
         protected void onPreExecute() {
             //txt.setText("Task Starting...");
             progressBar_open.setVisibility(ProgressBar.VISIBLE);
-            button_open.setEnabled(false); //prevent multiple times opening
+            save_interface_enable_status();
+            disable_interface(); //prevent multiple times opening
         }
 
         @Override
@@ -257,10 +328,10 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
                 editText_wordcnt.setText(String.valueOf(my_fc_col.total_card_num));
                 editText_flashcard_name.setText(my_fc_col.box_name);
                 button_save.setEnabled(true);
-                button_open.setEnabled(false); // again, no need
+                button_reset.setEnabled(true);
             } else {
                 error_dialog(error_obj);
-                button_open.setEnabled(true); //allow opening again. because the last opening was not successful.
+                load_interface_enable_status(); //allow opening again. because the last opening was not successful.
             }
         }
 
@@ -268,15 +339,16 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
 
     //----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     class SaverTaskClass extends AsyncTask<Integer, Integer, Boolean> { //params, progress, result
 
         @Override
         protected void onPreExecute() {
             //txt.setText("Task Starting...");
             progressBar_save.setVisibility(ProgressBar.VISIBLE);
-            button_save.setEnabled(false); // prevent multiple times saving
+            save_interface_enable_status();
+            disable_interface(); // prevent multiple times saving
         }
 
         @Override
@@ -301,25 +373,73 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
             if (result) {
 
                 my_fc_col.close();
-                button_save.setEnabled(false); //again, no need
                 button_open.setEnabled(true);
 
                 //Clear File Info on TextBoxes
                 editText_wordcnt.setText("0");
                 editText_flashcard_name.setText("-");
 
-
                 //Dialog for "Saved Successfully".
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-                mBuilder.setTitle("!");
+                mBuilder.setTitle(" ");
+                mBuilder.setIcon(android.R.drawable.checkbox_on_background);
                 mBuilder.setMessage("Saved Successfully");
                 //mBuilder.setView(); //good tutorial : https://www.youtube.com/watch?v=plnLs6aST1M
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+            } else {
+                error_dialog(error_obj);
+                load_interface_enable_status(); //allow saving again. because the last time it was not successful.
+            }
+        }
+
+    }//SaverTaskClass
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    class ReseterTaskClass extends AsyncTask<Integer, Integer, Boolean> { //params, progress, result
+
+        @Override
+        protected void onPreExecute() {
+            //txt.setText("Task Starting...");
+            progressBar_reset.setVisibility(ProgressBar.VISIBLE);
+            save_interface_enable_status();
+            disable_interface(); // prevent multiple times saving
+        }
+
+        @Override
+        protected Boolean doInBackground(Integer... params) { //in this code, params not used
+            /*
+            publishProgress(50);
+            */
+            return (my_fc_col.reset(error_obj));
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //txt.setText("Running..." + values[0]);
+            //progressBar_reset.setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            progressBar_reset.setVisibility(ProgressBar.INVISIBLE);
+            load_interface_enable_status();
+
+            if (result) {
+                //Dialog for "Reset Successfully".
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                mBuilder.setIcon(android.R.drawable.checkbox_on_background);
+                mBuilder.setTitle(" ");
+                mBuilder.setMessage("Reseted Successfully");
                 AlertDialog dialog = mBuilder.create();
                 dialog.show();
 
             } else {
                 error_dialog(error_obj);
-                button_save.setEnabled(true); //allow saving again. because the last time it was not successful.
             }
         }
 
@@ -329,11 +449,9 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 }//public class MainActivity
 
 //TODO: later change XML parser to resolve the problem with modifying special characters.
-//TODO: ask user for disk access.
-//TODO: show loading, saving.. dialog box for big files.
 //TODO: function for compare or sort
 //TODO: change file format: each card should has an ID, attribs: difficulty, terminology, book, ..
 //TODO: compress/encrypt the file
-//TODO: File open and saving issue
+//TODO: File open from/ Save to Dropbox or google drive.
 //TODO: Automatice UML extract (schematic about how classes access each other
 //TODO: add document folder incluidng readme.txt and schematic visio files to project.

@@ -7,9 +7,9 @@ package com.hamze.myflashqard;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
-import android.widget.ProgressBar;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +45,8 @@ public class flashcard_collectin {
     private static final String TG_STAGE = "stage";
     private static final String ATTR_VOC = "vocabulary"; //card type
     //private static final String ATTR_REG = "regular";    //card type  //TODO: add regular card.
+
+    private static final String FOLDER_NAME_ON_STORAGE = "Flashqard";
 
     //variables
     private boolean IsOpen;
@@ -95,18 +97,21 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // read XML file into flash card object
-    public boolean Read_fq_from_file(String fpath, error error_obj) {
+    public boolean Read_fq_from_file(String path, error error_obj) {
 
-        if (IsOpen) { // already open. should be closed first.
-            error_obj.set_error_code(11);
+        file_path = path;
+        int card_cnt = 0;
+        String last_att_val = "";
+        int stage_counter = -1;
+        Stack<String> tag_stack = new Stack<String>();//stack for keeping last open tag during parsing
+        boolean first_lang = true; //auxiliary variable to differentiate first and second TG_TRD tage
+
+        if (IsOpen) {
+            error_obj.set_error_code(11); //"already open. close it first!"
             return false;
         }
 
-
-        file_path = fpath;
-        AssetManager asset_mng = outer_context.getAssets();
-
-        //XML file parser
+        // XML file parser
         XmlPullParserFactory factory;
         XmlPullParser xpp = null;
         try {
@@ -115,23 +120,45 @@ public class flashcard_collectin {
             xpp = factory.newPullParser();
         } catch (XmlPullParserException e) {
             e.printStackTrace();
-            error_obj.set_error_code(10);
+            error_obj.set_error_code(10); // "XML parser can not initialize"
             return false;
         }
 
+        // first check that the file exist on External storage or not.
+        // If it exists, it means user resume his/her previous session,
+        // otherwise, user start a flashcard a new.
+        String storage_state = Environment.getExternalStorageState();
+        if (!storage_state.equals("mounted")) {
+            error_obj.set_error_code(3); //"Ex-Storage not mounted!"
+            return false;
+        }
 
-        InputStream inp_strm = null;
-        int card_cnt = 0;
-        String last_att_val = "";
-        int stage_counter = -1;
-        Stack<String> tag_stack = new Stack<String>();//stack for keeping last open tag during parsing
-        boolean first_lang = true; //auxiliary variable to differentiate first and second TG_TRD tage
+        File fq_folder = null;
+        File fq_file = null;
+        AssetManager asset_mng = outer_context.getAssets();
+        InputStream in_strm = null;
 
+        String storage_root_path = Environment.getExternalStorageDirectory().getPath();
+        fq_folder = new File(storage_root_path, FOLDER_NAME_ON_STORAGE); //This path is created in write_fq_to_file method.
+        fq_file = new File(fq_folder, file_path);  // file path on external storage  for opening
+
+        // select source of file
         try {
+            if (fq_file.exists())
+                in_strm = new FileInputStream(fq_file); //from external storage
+            else
+                in_strm = asset_mng.open(file_path); //from Asset
+        } catch (IOException e) {
+            e.printStackTrace();
+            error_obj.set_error_code(8); //"File Not Found"
+            return false;
+        }
 
-            inp_strm = asset_mng.open(file_path);
-            xpp.setInput(inp_strm, null);
-            int eventType = xpp.getEventType();
+        //Reading and Parsing the XML file
+        try {
+            xpp.setInput(in_strm, null);
+            int eventType = 0;
+            eventType = xpp.getEventType();
 
             //main parsing loop
             while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -276,16 +303,15 @@ public class flashcard_collectin {
             total_card_num = card_cnt;
 
             //close the files
-            inp_strm.close();
+            in_strm.close();
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            error_obj.set_error_code(8); //"File Not Found";
-            return false;
         } catch (XmlPullParserException e) {
             e.printStackTrace();
-            error_obj.set_error_code(9);
+            error_obj.set_error_code(9); //"XML parser error"
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            error_obj.set_error_code(12); //"Error in accessing the file"
             return false;
         }
 
@@ -302,18 +328,18 @@ public class flashcard_collectin {
 
         //flash card should be opened first
         if (!IsOpen) {
-            error_obj.set_error_code(1);
+            error_obj.set_error_code(1); //"No flashcard open"
             return false;
         }
 
         if (file_path.equals("")) {
-            error_obj.set_error_code(2);
+            error_obj.set_error_code(2); //"No file path to save!"
             return false;
         }
 
         String storage_state = Environment.getExternalStorageState();
         if (!storage_state.equals("mounted")) {
-            error_obj.set_error_code(3);
+            error_obj.set_error_code(3); //"Ex-Storage not mounted!"
             return false;
         }
 
@@ -323,7 +349,7 @@ public class flashcard_collectin {
         //   read more here: https://android.stackexchange.com/questions/53422/folder-on-phone-not-showing-in-windows
         //   but simple solution is to use " AirDroid" tool to access phone from pc.
         String storage_root_path = Environment.getExternalStorageDirectory().getPath();
-        File fq_folder = new File(storage_root_path, "Flashqard"); //path of new folder on root directory
+        File fq_folder = new File(storage_root_path, FOLDER_NAME_ON_STORAGE); //path of new folder on root directory
         if (!fq_folder.exists()) {
             if (!fq_folder.mkdirs()) {// this will create folder.
                 error_obj.set_error_code(4); // "Program folder not created. No storage permission"
@@ -488,5 +514,57 @@ public class flashcard_collectin {
         return;
     }// close
 
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // reset statistics of open flash file it includes below steps:
+    // 1-delete file on external memory, if exists
+    // 2-reload file from asset
+    public Boolean reset(error error_obj) {
 
+        //flash card should be opened first
+        if (!IsOpen) {
+            error_obj.set_error_code(1); //"No flashcard open"
+            return false;
+        }
+
+
+        //clear current open data
+        for (int i = 0; i < MAX_STAGE_NUM; i++) {
+            stage_list[i].stage_type = -1; //inactive
+            stage_list[i].cards.clear(); // clear the link list in each stage
+        }
+
+
+        //delete file on external memory if exist
+
+        //first check that the file exist on External storage or not.
+        String storage_state = Environment.getExternalStorageState();
+        if (!storage_state.equals("mounted")) {
+            error_obj.set_error_code(3); //"Ex-Storage not mounted!"
+            return false;
+        }
+
+        File fq_folder = null;
+        File fq_file = null;
+
+        String storage_root_path = Environment.getExternalStorageDirectory().getPath();
+        fq_folder = new File(storage_root_path, FOLDER_NAME_ON_STORAGE); //This path is created in write_fq_to_file method.
+        fq_file = new File(fq_folder, file_path);  // file path on external storage  for opening
+
+        //now delete it, if exists
+        if (fq_file.exists())
+            if (!fq_file.delete()) {
+                error_obj.set_error_code(13); //"File can not be deleted"
+                return false;
+            }
+
+
+        //reload file from asset
+        IsOpen = false;
+        if (!Read_fq_from_file(file_path, error_obj))
+            return false;
+
+        return true;
+    }
 }
