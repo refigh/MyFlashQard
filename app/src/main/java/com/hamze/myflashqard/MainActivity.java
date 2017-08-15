@@ -2,6 +2,7 @@ package com.hamze.myflashqard;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,9 +17,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity { //implements View.OnClickListener
+public class MainActivity extends AppCompatActivity {
 
-
+    //info text box
     private TextView editText_wordcnt;
     private TextView editText_flashcard_name;
 
@@ -34,15 +35,21 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
     private error error_obj = new error();
 
     //define an empty flashcard collection. this is the main data structure which the file will be read in to it.
-    private flashcard_collectin my_fc_col = new flashcard_collectin(MainActivity.this);
+    // it is static final, so other activities can access it easily as singleton.
+    //  read more: https://stackoverflow.com/questions/4878159/whats-the-best-way-to-share-data-between-activities
+    private static final flashcard_collectin my_fc_col = new flashcard_collectin();
 
-
+    //progress bar
     private ProgressBar progressBar_open;
     private ProgressBar progressBar_save;
     private ProgressBar progressBar_reset;
 
-    private int count = 1;
+    //keep current context in static field, so other statics can access it.
+    // read more: https://stackoverflow.com/questions/4391720/how-can-i-get-a-resource-content-from-a-static-context
+    private static Context mContext;
 
+
+    private int count = 1;
 
 
     //----------------------------------------------------------------------------------------
@@ -77,22 +84,25 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         for (Boolean b : all_buttons_enable_status)
             b = false;
 
+        //info text box
         editText_wordcnt = (TextView) findViewById(R.id.editText_wordcnt);
         editText_flashcard_name = (TextView) findViewById(R.id.editText_flashcard_name);
 
 
-        //Open and Save flashcard progress bar
+        //progress bars
         progressBar_open = (ProgressBar) findViewById(R.id.progressBar_open);
         progressBar_save = (ProgressBar) findViewById(R.id.progressBar_save);
         progressBar_reset = (ProgressBar) findViewById(R.id.progressBar_reset);
 
 
+        // keep current context
+        mContext = MainActivity.this;
+
         // request for application permission at run time.
         // Note that permissions should be set inside AndroidManifest.xml file beforehand too.
         permission_request();
 
-
-    }
+    }//onCreate
 
 
     //----------------------------------------------------------------------------------------
@@ -131,12 +141,10 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
                     //run a AsyncTask (a kind of thread) for file opening. Because it takes some seconds.
                     OpenerTaskClass my_reader_task = new OpenerTaskClass();
                     my_reader_task.execute((String) fq_files[which]); // execute(Params...). pass parameter to task.
-
-                }
+                }//onClick
             });
             AlertDialog dialog = mBuilder.create();
             dialog.show();
-
 
         } //onClick
     }; //button_open_OnClickListener
@@ -178,13 +186,12 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
                             // it includes delete of file, and re-open the flash file
                             ReseterTaskClass my_reseter_task = new ReseterTaskClass();
                             my_reseter_task.execute(0); // execute(Params...)
-                        }
+                        }//onClick
                     })
                     .setNegativeButton(android.R.string.no, null).show();
 
         } //onClick
     }; //button_reset_OnClickListener
-
 
 
     //----------------------------------------------------------------------------------------
@@ -258,6 +265,22 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         }
 
     }//permission_request
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    public static Context getContext() {
+        return mContext;
+    }//getContext
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    public static flashcard_collectin getFlashcard() {
+        return my_fc_col;
+    }//getFlashcard
 
 
     //----------------------------------------------------------------------------------------
@@ -353,7 +376,10 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
             /*
             publishProgress(50);
             */
-            return (my_fc_col.Write_fq_to_file(error_obj));
+
+            //TODO: below line is commented, because the saved HTML code, can not be opened again in XML parser. because of special character issue.
+            //return (my_fc_col.Write_fq_to_file(error_obj));
+            return true;
         }
 
         @Override
@@ -445,10 +471,12 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
 }//public class MainActivity
 
-//TODO: later change XML parser to resolve the problem with modifying special characters.
+//TODO Important !!!!!: later assess XML parser to resolve the problem with modifying special characters. but it seems what it does is correct! and converted HTML code are displayed better than original. although the html text will be different that what is generated in PC application.
+//      But this cause XML parser error, when the file is saved. then for now, saving is disabled.
+//TODO: how many save is ok on flash card? how to avoid saving on a similar location?
 //TODO: function for compare or sort
 //TODO: change file format: each card should has an ID, attribs: difficulty, terminology, book, ..
 //TODO: compress/encrypt the file
 //TODO: File open from/ Save to Dropbox or google drive.
-//TODO: Automatice UML extract (schematic about how classes access each other
-//TODO: add document folder incluidng readme.txt and schematic visio files to project.
+//TODO: Automatic UML extract (schematic about how classes access each other
+//TODO: add document folder including readme.txt and schematic visio files to project.

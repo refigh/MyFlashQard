@@ -63,16 +63,13 @@ public class flashcard_collectin {
     public int total_card_num;
 
 
-    private stage[] stage_list; // each stage includes a list of cards
-
-    // variable to hold context
-    private Context outer_context;
+    public stage[] stage_list; // each stage includes a list of cards
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // Constructor
-    flashcard_collectin(Context context) {
+    flashcard_collectin() { //Context context) {
         authoremail = "";
         license = "";
         author = "";
@@ -89,9 +86,7 @@ public class flashcard_collectin {
             stage_list[i] = new stage();
         }
 
-        outer_context = context;
-
-    }// constructor
+     }// constructor
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -135,7 +130,7 @@ public class flashcard_collectin {
 
         File fq_folder = null;
         File fq_file = null;
-        AssetManager asset_mng = outer_context.getAssets();
+        AssetManager asset_mng = MainActivity.getContext().getAssets();
         InputStream in_strm = null;
 
         String storage_root_path = Environment.getExternalStorageDirectory().getPath();
@@ -251,9 +246,9 @@ public class flashcard_collectin {
                             //TODO: later check whether getText modify any other charackter than belows...
 
                             if (!first_lang) //!first_lang, because first_lang is already toggled in start tag.
-                                stage_list[stage_counter].cards.peekLast().Text_of_First_Language = xpp.getText().replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
+                                stage_list[stage_counter].cards.peekLast().Text_of_First_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
                             else
-                                stage_list[stage_counter].cards.peekLast().Text_of_Second_Language = xpp.getText().replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
+                                stage_list[stage_counter].cards.peekLast().Text_of_Second_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
 
                             break;
 

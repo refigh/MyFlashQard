@@ -4,19 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+
+
     <TextView
         android:id="@+id/textView_side1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.60"
-        android:text="TextView" />
+        android:text="TextView"
+        android:background="#FFFF99"
+        android:textColor="#000"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textView_side2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.58"
-        android:text="TextView" />
+        android:text="TextView"
+        android:background="#66FFB2"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView_example"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.58"
+        android:text="TextView"
+        android:background="#DCDCDC"
+        android:textColor="#000"
+        android:textSize="20sp" />
 
     <TableRow
         android:layout_width="match_parent"
@@ -33,7 +52,7 @@
             android:id="@+id/button_show"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show" />
+            android:text="Show/Hide" />
 
         <CheckBox
             android:id="@+id/checkBox_correct"
