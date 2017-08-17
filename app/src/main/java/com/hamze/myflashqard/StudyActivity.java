@@ -1,6 +1,7 @@
 package com.hamze.myflashqard;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -120,23 +122,67 @@ public class StudyActivity extends Activity {
         @Override
         public void onClick(final View v) {
 
+            String string_side1 = "";
+            String string_side2 = "";
+            String string_examp = "";
+            vocabulary_card card_temp = null;
+
             //below is a temporary card review algorithm. only study stage[1] and
             // remove the correct cards.
 
-            //remove the correct card
-            if (ind != -1) { //not first time
+            //before going to next card, move the correct currently shown card to another stage
+            if (ind != -1) { //not first time of pressing "Next"
+
+                //the correct card should be moved to another stage.
                 if (checkBox_correct.isChecked())
-                    my_fc_col.stage_list[1].cards.remove(ind);
+                    if (!my_fc_col.stage_list[1].cards.isEmpty()) {
+
+                        //for now, we jut move it to stage 2, later we correct this
+                        card_temp = my_fc_col.stage_list[1].cards.remove(ind);
+
+                        //below two lines are not correct: we never inactivate an empty stage
+                        //active stages are existing stages, may containing 0 cards
+                        //inactive stages are always at end, not in the middle.
+                        //if ( my_fc_col.stage_list[1].cards.isEmpty())
+                        //    my_fc_col.stage_list[1].stage_type = -1; //inactive
+
+                        my_fc_col.stage_list[2].cards.addFirst(card_temp);
+                        my_fc_col.stage_list[2].stage_type = 1; //active stage
+                    }
             }
 
-            //show a random card from stage 1, and remove it if it is correct!
-            int size = my_fc_col.stage_list[1].cards.size();
-            ind = ThreadLocalRandom.current().nextInt(0, size);
-            vocabulary_card temp = my_fc_col.stage_list[1].cards.get(ind);
 
-            textView_side1.setText(android.text.Html.fromHtml( "<div>Card Side 1:</div>" + temp.Text_of_First_Language , Html.FROM_HTML_MODE_LEGACY));
-            textView_side2.setText(android.text.Html.fromHtml( "<div>Card Side 2:</div>" + temp.Text_of_Second_Language , Html.FROM_HTML_MODE_LEGACY));
-            textView_example.setText("Examples:\n" + temp.Text_of_examples);
+            //show a random card from stage 1, and remove it if it is correct!
+            int card_num = my_fc_col.stage_list[1].cards.size();
+
+            if (card_num == 0) {
+                string_side1 = "There is no card left in stage";
+                string_side2 = "There is no card left in stage";
+                string_examp = "There is no card left in stage";
+            } else {
+                //select a random card.
+                Random rand = new Random();
+                ind = rand.nextInt(card_num); // 0 to card_num -1
+                card_temp = my_fc_col.stage_list[1].cards.get(ind);
+                string_side1 = "<div>Card Side 1:</div>" + card_temp.Text_of_First_Language;
+                string_side2 = "<div>Card Side 2:</div>" + card_temp.Text_of_Second_Language;
+                string_examp = "Examples:\n" + card_temp.Text_of_examples;
+            }
+
+
+            //converting to HTML format
+            Spanned html_side1, html_side2;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                html_side1 = Html.fromHtml(string_side1, Html.FROM_HTML_MODE_LEGACY);
+                html_side2 = Html.fromHtml(string_side2, Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                html_side1 = Html.fromHtml(string_side1);
+                html_side2 = Html.fromHtml(string_side2);
+            }
+
+            textView_side1.setText(html_side1);
+            textView_side2.setText(html_side2);
+            textView_example.setText(string_examp);
 
             //by default, 2nd side of card should be invisible
             textView_side2.setVisibility(TextView.INVISIBLE);

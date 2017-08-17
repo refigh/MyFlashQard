@@ -24,10 +24,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView editText_flashcard_name;
 
     //buttons
-    private Button button_save;
+    private Button button_save_close;
     private Button button_open;
     private Button button_reset;
     private Button button_start;
+    private Button button_Nosave_close;
+
     private Button[] all_buttons; //initiate it after initiation of above buttons
     private Boolean[] all_buttons_enable_status;
 
@@ -65,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         button_open.setOnClickListener(button_open_OnClickListener);
 
         //Save flashcard button
-        button_save = (Button) findViewById(R.id.button_save);
-        button_save.setOnClickListener(button_save_OnClickListener);
+        button_save_close = (Button) findViewById(R.id.button_save_close);
+        button_save_close.setOnClickListener(button_save_close_close_OnClickListener);
 
         //reset flashcard button
         button_reset = (Button) findViewById(R.id.button_reset);
@@ -77,9 +79,13 @@ public class MainActivity extends AppCompatActivity {
         button_start = (Button) findViewById(R.id.button_start);
         button_start.setOnClickListener(button_start_OnClickListener);
 
+        //Close without saving flashcard button
+        button_Nosave_close = (Button) findViewById(R.id.button_Nosave_close);
+        button_Nosave_close.setOnClickListener(button_Nosave_close_OnClickListener);
+
 
         //all buttons
-        all_buttons = new Button[]{button_save, button_open, button_reset, button_start};
+        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close};
         all_buttons_enable_status = new Boolean[all_buttons.length];
         for (Boolean b : all_buttons_enable_status)
             b = false;
@@ -124,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
             final CharSequence fq_files[] = new CharSequence[]{
                     "english_vocab.fq",
                     "turkish.fq",
-                    "test_set.fq",
-                    "test_set2.fq",
+                    "test_set_01.fq",
+                    "test_set_02.fq",
                     "NoExitTest"
             };
 
@@ -153,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    //On click listener for button_save
-    final View.OnClickListener button_save_OnClickListener = new View.OnClickListener() {
+    //On click listener for button save and close
+    final View.OnClickListener button_save_close_close_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
 
@@ -163,13 +169,13 @@ public class MainActivity extends AppCompatActivity {
             my_saver_task.execute(0); // execute(Params...)
 
         } //onClick
-    }; //button_save_OnClickListener
+    }; //button_save_close_close_OnClickListener
 
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    //On click listener for reset_save
+    //On click listener for button reset
     final View.OnClickListener button_reset_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -204,6 +210,28 @@ public class MainActivity extends AppCompatActivity {
 
             Intent study_act = new Intent(MainActivity.this, StudyActivity.class);
             startActivity(study_act);
+
+        } //onClick
+    }; //button_start_OnClickListener
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for close without save button
+    final View.OnClickListener button_Nosave_close_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+            disable_interface();
+
+            my_fc_col.close();
+            button_open.setEnabled(true);
+
+            //Clear File Info on TextBoxes
+            editText_wordcnt.setText("0");
+            editText_flashcard_name.setText("-");
+
 
         } //onClick
     }; //button_start_OnClickListener
@@ -346,9 +374,10 @@ public class MainActivity extends AppCompatActivity {
                 //Print File Info on TextBoxes
                 editText_wordcnt.setText(String.valueOf(my_fc_col.total_card_num));
                 editText_flashcard_name.setText(my_fc_col.box_name);
-                button_save.setEnabled(true);
+                button_save_close.setEnabled(true);
                 button_reset.setEnabled(true);
                 button_start.setEnabled(true);
+                button_Nosave_close.setEnabled(true);
             } else {
                 error_dialog(error_obj);
                 load_interface_enable_status(); //allow opening again. because the last opening was not successful.
@@ -378,8 +407,9 @@ public class MainActivity extends AppCompatActivity {
             */
 
             //TODO: below line is commented, because the saved HTML code, can not be opened again in XML parser. because of special character issue.
-            //return (my_fc_col.Write_fq_to_file(error_obj));
-            return true;
+            //return true;
+            return (my_fc_col.Write_fq_to_file(error_obj));
+
         }
 
         @Override
@@ -471,8 +501,7 @@ public class MainActivity extends AppCompatActivity {
 
 }//public class MainActivity
 
-//TODO Important !!!!!: later assess XML parser to resolve the problem with modifying special characters. but it seems what it does is correct! and converted HTML code are displayed better than original. although the html text will be different that what is generated in PC application.
-//      But this cause XML parser error, when the file is saved. then for now, saving is disabled.
+//TODO : what is difference two forms of closing application? I see edited text are reloaded if you minimize the app and open it.
 //TODO: how many save is ok on flash card? how to avoid saving on a similar location?
 //TODO: function for compare or sort
 //TODO: change file format: each card should has an ID, attribs: difficulty, terminology, book, ..

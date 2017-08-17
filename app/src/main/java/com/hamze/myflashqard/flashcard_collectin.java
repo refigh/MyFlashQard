@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -242,9 +243,12 @@ public class flashcard_collectin {
                             break;
 
                         case TG_HTM: //html
-                            //getText replace some special characthers automatically! I revert some back.
-                            //TODO: later check whether getText modify any other charackter than belows...
-
+                            // Origianlly we replace "<" with "&lt;" in text file to prevent parssing problem.
+                            // here getText function replace back some special characthers like "&lt;" automatically!
+                            // This is good for display them on application, but later later when we want to
+                            // save the file again, we again use such method, meaning "&lt;" instead of "<".
+                            // refer to Write_fq_to_file(), HTML part, to see those replacement.
+                            //TODO: later check this more if necessary...
                             if (!first_lang) //!first_lang, because first_lang is already toggled in start tag.
                                 stage_list[stage_counter].cards.peekLast().Text_of_First_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
                             else
@@ -389,11 +393,11 @@ public class flashcard_collectin {
                         writer.write("   <" + TG_CARD + " type=\"" + ATTR_VOC + "\" >\n");
 
                         writer.write("    <" + TG_TRD + " language=\"" + curr_card.First_Language + "\" >\n");
-                        writer.write("     <" + TG_HTM + ">" + curr_card.Text_of_First_Language + "</" + TG_HTM + ">\n");
+                        writer.write("     <" + TG_HTM + ">" + curr_card.Text_of_First_Language.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;") + "</" + TG_HTM + ">\n");
                         writer.write("    </" + TG_TRD + ">\n");
 
                         writer.write("    <" + TG_TRD + " language=\"" + curr_card.Second_Language + "\" >\n");
-                        writer.write("     <" + TG_HTM + ">" + curr_card.Text_of_Second_Language + "</" + TG_HTM + ">\n");
+                        writer.write("     <" + TG_HTM + ">" + curr_card.Text_of_Second_Language.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;") + "</" + TG_HTM + ">\n");
                         writer.write("    </" + TG_TRD + ">\n");
 
                         writer.write("    <" + TG_EXM + ">" + curr_card.Text_of_examples + "</" + TG_EXM + ">\n");
@@ -464,7 +468,10 @@ public class flashcard_collectin {
         while ((stage_list[stg_cnt].stage_type != -1) && (stg_cnt < MAX_STAGE_NUM)) {
             int size = stage_list[stg_cnt].cards.size();
             for (int i = 0; i < size; i++) {
-                int ind = ThreadLocalRandom.current().nextInt(0, size);
+
+                Random rand = new Random();
+                int ind = rand.nextInt(size); // 0 to size -1
+
                 vocabulary_card temp = stage_list[stg_cnt].cards.remove(ind);
                 stage_list[stg_cnt].cards.addFirst(temp);
             }

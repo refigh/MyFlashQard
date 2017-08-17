@@ -121,7 +121,7 @@
                 android:layout_height="match_parent">
 
                 <Button
-                    android:id="@+id/button_save"
+                    android:id="@+id/button_save_close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -136,12 +136,46 @@
                     android:visibility="invisible" />
             </TableRow>
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/button_Nosave_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="Do not Save and Close" />
+
+
+            </TableRow>
+
+
             <Button
                 android:id="@+id/button_start"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:enabled="false"
                 android:text="STUDY!" />
+
+            <EditText
+                android:id="@+id/editText_author"
+                android:editable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="محصولی از حمزه ابن عبدالمجید." />
+
+            <EditText
+                android:id="@+id/editText_version"
+                android:editable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="بدون اجازه منتشر نشود. نسخه 1.00" />
+
 
         </TableLayout>
 

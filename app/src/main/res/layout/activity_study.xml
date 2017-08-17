@@ -62,6 +62,11 @@
             android:text="Correct?" />
     </TableRow>
 
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="30sp">
+    </TableRow>
+
     <Button
         android:id="@+id/button_close_study"
         android:layout_width="match_parent"
