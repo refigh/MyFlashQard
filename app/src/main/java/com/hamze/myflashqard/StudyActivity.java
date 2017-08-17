@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -60,12 +61,16 @@ public class StudyActivity extends Activity {
 
         //text boxes
         textView_side1 = (TextView) findViewById(R.id.textView_side1);
+        textView_side1.setMovementMethod(new ScrollingMovementMethod());
+
 
         //text boxes
         textView_side2 = (TextView) findViewById(R.id.textView_side2);
+        textView_side2.setMovementMethod(new ScrollingMovementMethod());
 
         //text boxes
         textView_example = (TextView) findViewById(R.id.textView_example);
+        textView_example.setMovementMethod(new ScrollingMovementMethod());
 
         //check box
         checkBox_correct = (CheckBox) findViewById(R.id.checkBox_correct);
@@ -152,7 +157,7 @@ public class StudyActivity extends Activity {
             }
 
 
-            //show a random card from stage 1, and remove it if it is correct!
+            //show a random card from stage 1
             int card_num = my_fc_col.stage_list[1].cards.size();
 
             if (card_num == 0) {
@@ -164,9 +169,9 @@ public class StudyActivity extends Activity {
                 Random rand = new Random();
                 ind = rand.nextInt(card_num); // 0 to card_num -1
                 card_temp = my_fc_col.stage_list[1].cards.get(ind);
-                string_side1 = "<div>Card Side 1:</div>" + card_temp.Text_of_First_Language;
-                string_side2 = "<div>Card Side 2:</div>" + card_temp.Text_of_Second_Language;
-                string_examp = "Examples:\n" + card_temp.Text_of_examples;
+                string_side1 = card_temp.Text_of_First_Language;
+                string_side2 = card_temp.Text_of_Second_Language;
+                string_examp = card_temp.Text_of_examples;
             }
 
 
@@ -181,8 +186,15 @@ public class StudyActivity extends Activity {
             }
 
             textView_side1.setText(html_side1);
+            textView_side1.scrollTo(0,0);
+
             textView_side2.setText(html_side2);
+            textView_side2.scrollTo(0,0);
+
             textView_example.setText(string_examp);
+            textView_example.scrollTo(0,0);
+
+            checkBox_correct.setChecked(false);
 
             //by default, 2nd side of card should be invisible
             textView_side2.setVisibility(TextView.INVISIBLE);

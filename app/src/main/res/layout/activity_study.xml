@@ -6,36 +6,68 @@
 
 
 
+    <TextView
+        android:id="@+id/textView_side1_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Side1"
+        android:gravity="center"
+        android:background="#FFFF30"
+        android:textColor="#000"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView_side1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.60"
-        android:text="TextView"
+        android:text="Press Next"
+        android:scrollbars="vertical"
         android:background="#FFFF99"
         android:textColor="#000"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView_side2_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Side2"
+        android:gravity="center"
+        android:background="#37F998"
+        android:textColor="#000"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView_side2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.58"
-        android:text="TextView"
+        android:text=""
+        android:scrollbars="vertical"
         android:background="#66FFB2"
         android:textColor="#000"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView_example_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Examples"
+        android:gravity="center"
+        android:background="#CBCECD"
+        android:textColor="#000"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView_example"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.58"
-        android:text="TextView"
+        android:text=""
+        android:scrollbars="vertical"
         android:background="#DCDCDC"
         android:textColor="#000"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TableRow
         android:layout_width="match_parent"
