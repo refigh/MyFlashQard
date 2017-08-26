@@ -501,6 +501,9 @@ public class MainActivity extends AppCompatActivity {
 
 }//public class MainActivity
 
+
+//TODO: use should not loose its data after software or dictionary udpdate....
+//TODO: check and ask user that the clock of phone is update.
 //TODO : what is difference two forms of closing application? I see edited text are reloaded if you minimize the app and open it.
 //TODO: how many save is ok on flash card? how to avoid saving on a similar location?
 //TODO: function for compare or sort
@@ -509,3 +512,7 @@ public class MainActivity extends AppCompatActivity {
 //TODO: File open from/ Save to Dropbox or google drive.
 //TODO: Automatic UML extract (schematic about how classes access each other
 //TODO: add document folder including readme.txt and schematic visio files to project.
+//TODO: animated stars in ring bar
+//TODO: add pronunciation.
+//TODO: add comment for each card
+//TODO: add explanations and text in readme.txt about scheduling algorithm.

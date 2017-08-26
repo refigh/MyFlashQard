@@ -29,7 +29,7 @@
                     android:id="@+id/button_open"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Open Flashcard" />
+                    android:text="انتخاب مجموعه کارت" />
 
                 <ProgressBar
                     android:id="@+id/progressBar_open"
@@ -56,7 +56,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="FlashCard Name"
+                    android:text="نام مجموعه"
                     tools:editable="false" />
 
                 <EditText
@@ -80,7 +80,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="Word Count" />
+                    android:text="تعداد کارت ها" />
 
                 <EditText
                     android:id="@+id/editText_wordcnt"
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:text="Reset this set" />
+                    android:text="از نو کردن مجموعه" />
 
                 <ProgressBar
                     android:id="@+id/progressBar_reset"
@@ -125,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:text="Save and Close" />
+                    android:text="ذخیره کن و ببند" />
 
                 <ProgressBar
                     android:id="@+id/progressBar_save"
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:text="Do not Save and Close" />
+                    android:text="ذخیره نکن و ببند" />
 
 
             </TableRow>
@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:enabled="false"
-                android:text="STUDY!" />
+                android:text="آزمون!" />
 
             <EditText
                 android:id="@+id/editText_author"
@@ -169,12 +169,12 @@
 
             <EditText
                 android:id="@+id/editText_version"
-                android:editable="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:editable="false"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="بدون اجازه منتشر نشود. نسخه 1.01" />
+                android:text="بدون اجازه منتشر نشود. نسخه 1.1" />
 
 
         </TableLayout>

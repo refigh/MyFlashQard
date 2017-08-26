@@ -4,7 +4,7 @@
 
 package com.hamze.myflashqard;
 
-import android.content.Context;
+
 import android.content.res.AssetManager;
 import android.os.Environment;
 
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 import java.util.Stack;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -26,7 +25,13 @@ import org.xmlpull.v1.XmlPullParserFactory;
 public class flashcard_collectin {
 
     //constants
-    private static final int MAX_STAGE_NUM = 50;
+
+    //0 : inactive cards(stack)
+    //1 : new and un-reviewed stage cards
+    //2...MAX_STAGE_NUM-2 (MAX_STAGE_NUM-3 number): cards under review
+    //MAX_STAGE_NUM-1 : final successful stage
+    private static final int MAX_STAGE_NUM = 8; //min = 4, Max = 10 (due to Ratingbar presentation issue)
+    private long[] MIN_REVIEW_TIME; //defined for each stage. unit: millisecond
 
     //XML tags and attributes (shorter tags can be replaced for more file compression.
     //TODO: simplify XML tag names to reduce file size.
@@ -87,7 +92,16 @@ public class flashcard_collectin {
             stage_list[i] = new stage();
         }
 
-     }// constructor
+        MIN_REVIEW_TIME = new long[MAX_STAGE_NUM];
+        for (int i = 0; i < MAX_STAGE_NUM; i++) {
+            //values for state 0,1 and Final are not important
+            // x, x, 1, 3, ....
+            long number_of_days = (long) Math.pow(3, (i - 2));
+            MIN_REVIEW_TIME[i] = number_of_days * 24 * 60 * 60 * 1000; //convert from day to millisecond;
+            MIN_REVIEW_TIME[i] -= 1000000; //reduce a small number for avoid marginal calculation problem.
+        }
+
+    }// constructor
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -378,7 +392,10 @@ public class flashcard_collectin {
                 writer.write("  </" + TG_STACK + ">\n");
             } else
 
-                while ((stage_list[stg_cnt].stage_type != -1) && (stg_cnt < MAX_STAGE_NUM)) {
+                while (stg_cnt < MAX_STAGE_NUM) {
+
+                    if (stage_list[stg_cnt].stage_type == -1) //from now on, all are inactive.
+                        break;
 
                     if (stg_cnt == 0)
                         writer.write("  <" + TG_STACK + ">\n");
@@ -486,6 +503,7 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     public boolean Check_integrity() {
 
+        //TODO: check all cards inside any stage, except stage 0 & 1, are sorted by last correct answer time.
 
         return true;
     }// Check_integrity
@@ -569,4 +587,14 @@ public class flashcard_collectin {
 
         return true;
     }
+
+
+    public static int getMaxStageNum() {
+        return MAX_STAGE_NUM;
+    }
+
+    public long getMIN_REVIEW_TIME(int i) {
+        return MIN_REVIEW_TIME[i];
+    }
+
 }

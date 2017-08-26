@@ -5,25 +5,57 @@
     android:orientation="vertical">
 
 
-
-    <TextView
-        android:id="@+id/textView_side1_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Side1"
-        android:gravity="center"
         android:background="#FFFF30"
-        android:textColor="#000"
-        android:textSize="18sp" />
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RatingBar
+                android:id="@+id/ratingBar_NumCorrect"
+                style="@android:style/Widget.DeviceDefault.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:numStars="6"
+                android:rating="6"
+                android:stepSize="1"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_side1_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#FFFF30"
+            android:gravity="center"
+            android:text="روی اول"
+            android:textColor="#000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView_side1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.60"
-        android:text="Press Next"
-        android:scrollbars="vertical"
         android:background="#FFFF99"
+        android:scrollbars="vertical"
+        android:text="بعدی را بفشار"
         android:textColor="#000"
         android:textSize="18sp" />
 
@@ -31,9 +63,9 @@
         android:id="@+id/textView_side2_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Side2"
-        android:gravity="center"
         android:background="#37F998"
+        android:gravity="center"
+        android:text="روی دوم"
         android:textColor="#000"
         android:textSize="18sp" />
 
@@ -52,9 +84,9 @@
         android:id="@+id/textView_example_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Examples"
-        android:gravity="center"
         android:background="#CBCECD"
+        android:gravity="center"
+        android:text="مثال"
         android:textColor="#000"
         android:textSize="18sp" />
 
@@ -78,30 +110,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.04"
-            android:text="Next" />
+            android:text="بعدی" />
 
         <Button
             android:id="@+id/button_show"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show/Hide" />
+            android:text="کارت را برگردان" />
 
         <CheckBox
             android:id="@+id/checkBox_correct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.60"
-            android:text="Correct?" />
+            android:text="آیا حدستان درست بود؟" />
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="30sp">
+
     </TableRow>
 
     <Button
         android:id="@+id/button_close_study"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Finish Study" />
+        android:text="پایان آزمون" />
 </LinearLayout>

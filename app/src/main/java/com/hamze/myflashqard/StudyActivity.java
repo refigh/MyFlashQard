@@ -10,8 +10,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,11 +38,29 @@ public class StudyActivity extends Activity {
     private TextView textView_side2;
     private TextView textView_example;
 
-    //chexk box
+    //check box
     private CheckBox checkBox_correct;
 
+    //rating bar
+    private RatingBar ratingBar_NumCorrect;
+
     private flashcard_collectin my_fc_col;
-    private int ind;
+
+    //info of last showed card
+    private vocabulary_card Lastcard;
+    private int Lastcard_stage_num;
+
+    //date format
+    SimpleDateFormat df = new SimpleDateFormat("d.M.yyyy");
+
+    //Today
+    private Calendar cal;
+    private Date today;
+    private String today_formated;
+
+    //random generator
+    Random rand;
+
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -74,10 +97,31 @@ public class StudyActivity extends Activity {
 
         //check box
         checkBox_correct = (CheckBox) findViewById(R.id.checkBox_correct);
+        checkBox_correct.setChecked(false);
 
+        //Rating bar
+        ratingBar_NumCorrect = (RatingBar) findViewById(R.id.ratingBar_NumCorrect);
+        ratingBar_NumCorrect.setNumStars(my_fc_col.getMaxStageNum() - 2); //number of times that a card is answerd correctly. including the final stage.
+        ratingBar_NumCorrect.setRating(0);
+        ratingBar_NumCorrect.setStepSize(1);
 
+        //info of last showed card
+        Lastcard = null;
+        Lastcard_stage_num = -1;
+
+        //access to the uniqe flashcar collection.
         my_fc_col = MainActivity.getFlashcard();
-        ind = -1;
+
+
+        //Today
+        cal = Calendar.getInstance();
+        cal.clear(cal.MILLISECOND); //our precision is day.
+        cal.clear(cal.SECOND);
+        cal.clear(cal.MINUTE);
+        cal.clear(cal.HOUR);
+        today = cal.getTime();
+        today_formated = df.format(today);
+
 
     }//onClick
 
@@ -89,6 +133,7 @@ public class StudyActivity extends Activity {
         @Override
         public void onClick(final View v) {
 
+            //the current state of my_fc_col is not touched.
             StudyActivity.this.finish();
             return;
 
@@ -123,59 +168,112 @@ public class StudyActivity extends Activity {
     //----------------------------------------------------------------------------------------
     //On click listener for button_next
     final View.OnClickListener button_next_OnClickListener = new View.OnClickListener() {
-        //@RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onClick(final View v) {
 
+            //reset variables
             String string_side1 = "";
             String string_side2 = "";
             String string_examp = "";
-            vocabulary_card card_temp = null;
+            int next_stage = -1;
+            ratingBar_NumCorrect.setRating(0);
 
-            //below is a temporary card review algorithm. only study stage[1] and
-            // remove the correct cards.
 
-            //before going to next card, move the correct currently shown card to another stage
-            if (ind != -1) { //not first time of pressing "Next"
+            // Before showing next card, move the currently shown card to proper stage.
+            // in 2 situations there is no previous card: before first card, and after the last card (when there is no card to study)
+            if (Lastcard != null) {
 
-                //the correct card should be moved to another stage.
-                if (checkBox_correct.isChecked())
-                    if (!my_fc_col.stage_list[1].cards.isEmpty()) {
+                //in current algorithm we only care about last answering info.
+                Lastcard.The_statistics.answer_date.clear();
+                Lastcard.The_statistics.answer_value.clear();
 
-                        //for now, we jut move it to stage 2, later we correct this
-                        card_temp = my_fc_col.stage_list[1].cards.remove(ind);
+                // correct card should be moved to next stage.
+                // Wrong card should be moved to start stage.
+                if (checkBox_correct.isChecked()) {  //correct answer
 
-                        //below two lines are not correct: we never inactivate an empty stage
-                        //active stages are existing stages, may containing 0 cards
-                        //inactive stages are always at end, not in the middle.
-                        //if ( my_fc_col.stage_list[1].cards.isEmpty())
-                        //    my_fc_col.stage_list[1].stage_type = -1; //inactive
+                    Lastcard.The_statistics.answer_value.add("true");
+                    if (Lastcard_stage_num < (my_fc_col.getMaxStageNum() - 1))
+                        next_stage = Lastcard_stage_num + 1; // go next
+                    else
+                        next_stage = Lastcard_stage_num; //stay in final stage
 
-                        my_fc_col.stage_list[2].cards.addFirst(card_temp);
-                        my_fc_col.stage_list[2].stage_type = 1; //active stage
+                } else { //wrong answer
+                    Lastcard.The_statistics.answer_value.add("false");
+                    next_stage = 1;
+                }
+                Lastcard.The_statistics.answer_date.add(today_formated);
+
+
+                //move it to next stage
+                my_fc_col.stage_list[Lastcard_stage_num].cards.remove(Lastcard); // must return true...
+                my_fc_col.stage_list[next_stage].cards.addLast(Lastcard);
+                my_fc_col.stage_list[next_stage].stage_type = 1; //active stage, if it is not.
+
+            } //manage previously shown card
+
+
+            //select next card
+            Lastcard_stage_num = my_fc_col.getMaxStageNum() - 2; // no card is selected from Final stage. then search is started from stage before to last
+            boolean not_found = true;
+            while (true) { //not_found) {
+                stage Lastcard_stage = my_fc_col.stage_list[Lastcard_stage_num];
+
+                if (Lastcard_stage_num < 1) //card not found
+                    break;
+                else if ((Lastcard_stage.stage_type == -1) || Lastcard_stage.cards.isEmpty()) { //skip inactive or empty stages
+                    Lastcard_stage_num--;
+                    continue;
+                } else if ((Lastcard_stage_num == 1) || (Lastcard_stage.cards.getFirst().The_statistics.answer_date.isEmpty())) {
+                    //when head has no date, it should not happen in any stage other than start stage, then we assume we are in stage 1
+                    // from stage 1 (fresh cards) select randomly,
+                    not_found = false;
+                    rand = new Random();
+                    int index = rand.nextInt(Lastcard_stage.cards.size()); // 0 to card_num -1
+                    Lastcard = Lastcard_stage.cards.get(index);
+                    break;
+                } else {
+                    // find time difference with head of current stage
+                    Date head_date = null;
+                    try {
+                        head_date = df.parse(Lastcard_stage.cards.getFirst().The_statistics.answer_date.getFirst());
+                    } catch (ParseException e) {
+                        //TODO: assign new type of error due to time format error
+                        e.printStackTrace();
                     }
-            }
+
+                    long t1 = today.getTime(); //time in milliseconds
+                    long t2 = head_date.getTime();
+                    long time_dif_milisec = t1 - t2;
+
+                    if (time_dif_milisec > my_fc_col.getMIN_REVIEW_TIME(Lastcard_stage_num)) { // cards can not be reviewed earlier than one day
+                        Lastcard = Lastcard_stage.cards.getFirst();
+                        not_found = false;
+                        break;
+                    } else {
+                        //skip this stage, since it's head (and then whole cards) is not old enough
+                        Lastcard_stage_num--;
+                    }
+                }
+            }//while - search for next card
 
 
-            //show a random card from stage 1
-            int card_num = my_fc_col.stage_list[1].cards.size();
-
-            if (card_num == 0) {
-                string_side1 = "There is no card left in stage";
-                string_side2 = "There is no card left in stage";
-                string_examp = "There is no card left in stage";
+            // give value to strings and convert them to HTML format
+            if (not_found) {
+                Lastcard = null;
+                Lastcard_stage_num = -1;
+                string_side1 = "فعلا کارتی موجود نیست.";
+                string_side2 = "";
+                string_examp = "";
+                ratingBar_NumCorrect.setRating(0);
             } else {
-                //select a random card.
-                Random rand = new Random();
-                ind = rand.nextInt(card_num); // 0 to card_num -1
-                card_temp = my_fc_col.stage_list[1].cards.get(ind);
-                string_side1 = card_temp.Text_of_First_Language;
-                string_side2 = card_temp.Text_of_Second_Language;
-                string_examp = card_temp.Text_of_examples;
+                string_side1 = Lastcard.Text_of_First_Language;
+                string_side2 = Lastcard.Text_of_Second_Language;
+                string_examp = Lastcard.Text_of_examples;
+                // set how many times the card is answered correctly
+                ratingBar_NumCorrect.setRating(Lastcard_stage_num - 1);
             }
 
-
-            //converting to HTML format
+            //convert above string HTML format
             Spanned html_side1, html_side2;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 html_side1 = Html.fromHtml(string_side1, Html.FROM_HTML_MODE_LEGACY);
@@ -185,20 +283,23 @@ public class StudyActivity extends Activity {
                 html_side2 = Html.fromHtml(string_side2);
             }
 
+
+            //show the info of card
             textView_side1.setText(html_side1);
-            textView_side1.scrollTo(0,0);
+            textView_side1.scrollTo(0, 0);
 
             textView_side2.setText(html_side2);
-            textView_side2.scrollTo(0,0);
+            textView_side2.scrollTo(0, 0);
 
             textView_example.setText(string_examp);
-            textView_example.scrollTo(0,0);
+            textView_example.scrollTo(0, 0);
 
             checkBox_correct.setChecked(false);
 
             //by default, 2nd side of card should be invisible
             textView_side2.setVisibility(TextView.INVISIBLE);
             textView_example.setVisibility(TextView.INVISIBLE);
+
 
             return;
 

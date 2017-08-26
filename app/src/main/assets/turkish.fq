@@ -4,19 +4,20 @@
   <stage>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->belirtmek&lt;!--EndFragment-->&lt;/p></html>
+     <html>ilginç</html>
     </translationdocument>
     <translationdocument language="Second Language" >
-     <html>specify</html>
+     <html>
+&lt;p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">interesting =&amp;nbsp;enteresan&lt;/p></html>
     </translationdocument>
-    <examples></examples>
+    <examples>ilginç olay</examples>
     <wordtype></wordtype>
     <comments></comments>
     <synonyms></synonyms>
     <antonyms></antonyms>
     <statistics>
-     <dateCreated>24.7.2017</dateCreated>
+     <dateCreated>25.8.2017</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -27,23 +28,6 @@
      <html>law</html>
     </translationdocument>
     <examples>Yeni bir yasa yolda.</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>18.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>kural</html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>rule, regulation</html>
-    </translationdocument>
-    <examples>Kurallarrules insanlar için var.
-Öğretmen okul kuralları hakkında konuşacak.</examples>
     <wordtype></wordtype>
     <comments></comments>
     <synonyms></synonyms>
@@ -107,25 +91,6 @@
    <card type="vocabulary" >
     <translationdocument language="First Language" >
      <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->Rüşvet&lt;/p>
-&lt;p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>رشوه&lt;div>bribe,&amp;nbsp;bribery&lt;/div>
-</html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>18.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
 &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->politikacı&lt;!--EndFragment-->&lt;/p></html>
     </translationdocument>
     <translationdocument language="Second Language" >
@@ -156,56 +121,6 @@
     <antonyms></antonyms>
     <statistics>
      <dateCreated>18.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->barış&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">barışmak&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>peace&lt;div>make peace آشتی کردن&lt;/div></html>
-    </translationdocument>
-    <examples>barış antlaşması = peace treaty</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>15.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->milletvekili&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>member of the parliment</html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>13.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görev&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>duty task</html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>13.7.2017</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -256,23 +171,6 @@
     <antonyms></antonyms>
     <statistics>
      <dateCreated>4.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->ummak&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>to expect, to hope&lt;div>&lt;br>&lt;/div></html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>2.7.2017</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -331,23 +229,6 @@ Babama saygı duyuyor.
    </card>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->güç&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">güçlü&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>power قدرت&lt;div>güçlü = قوی =&amp;nbsp;kuvvetli&lt;/div></html>
-    </translationdocument>
-    <examples>Bilgi güçtür = Knowledge is power.
-</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>1.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
      <html>
 &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->olay&lt;!--EndFragment-->&lt;/p></html>
     </translationdocument>
@@ -355,23 +236,6 @@ Babama saygı duyuyor.
      <html>event, incident</html>
     </translationdocument>
     <examples>olay yeri = crime scene</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>1.7.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">sonuç&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>result</html>
-    </translationdocument>
-    <examples></examples>
     <wordtype></wordtype>
     <comments></comments>
     <synonyms></synonyms>
@@ -501,24 +365,6 @@ senin your you yours fikrin bizim için çok önemli.</examples>
    </card>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->eğlenmek&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>fun</html>
-    </translationdocument>
-    <examples>sadece eğlenmek için
-bugün eğlenmemiz gerekiyor</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>24.6.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
      <html>sunum</html>
     </translationdocument>
     <translationdocument language="Second Language" >
@@ -580,44 +426,6 @@ bugün eğlenmemiz gerekiyor</examples>
     <antonyms></antonyms>
     <statistics>
      <dateCreated>13.6.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->örnek&lt;/p>
-&lt;p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>&lt;div>= misal&lt;/div>exmple, sample</html>
-    </translationdocument>
-    <examples>Bu çok iyi bir örnek!
-Bir örnek veriyorum.</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>11.6.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->Eğitim&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->Education&amp;nbsp;&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <examples>milli eğitim bakanlığı
-görsel eğitim </examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>11.6.2017</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -1184,22 +992,6 @@ Benim boyum uzun = I am tall</examples>
    </card>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>eleştirmek</html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>criticize&lt;div>انتقاد&lt;/div></html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>15.12.2015</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
      <html>sayı</html>
     </translationdocument>
     <translationdocument language="Second Language" >
@@ -1494,23 +1286,6 @@ Uyarımıza aldırmadı = He took no notice of our warning.</comments>
     <antonyms></antonyms>
     <statistics>
      <dateCreated>27.2.2015</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>erişmek</html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->to access&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>25.9.2015</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -2721,24 +2496,6 @@ yaya yolu = pathway
    </card>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>sinav</html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>exam&lt;div>&lt;br>&lt;/div></html>
-    </translationdocument>
-    <examples>sınav yapmak
-yazılı sınav
-ara sınav = midterm</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>20.10.2015</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
      <html>ayı&lt;div>arı&lt;/div></html>
     </translationdocument>
     <translationdocument language="Second Language" >
@@ -3387,23 +3144,6 @@ O, arabayı durdurdu.</examples>
    </card>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->genişletmek&lt;!--EndFragment-->&lt;/p></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>to extend</html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>25.9.2015</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
      <html>yanit</html>
     </translationdocument>
     <translationdocument language="Second Language" >
@@ -3485,25 +3225,6 @@ bir daha asla! = never again!
     <antonyms></antonyms>
     <statistics>
      <dateCreated>24.5.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>görmek&lt;div> &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"> &lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görünmek&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"> &lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görüşmek&lt;!--EndFragment-->&lt;/p>&lt;p>&lt;/p>&lt;!--EndFragment-->&lt;p>&lt;/p>&lt;/div></html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>görmek =&amp;nbsp;دیدن&lt;div> &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görünmek = دیده شدن = be seen,&amp;nbsp;to appear, come into sight&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görüşmek&amp;nbsp;= to visit each other&lt;!--EndFragment-->&lt;/p>&lt;p>&lt;/p> &lt;/div></html>
-    </translationdocument>
-    <examples>rüya görmek = رویا دیدن
-çok iyi görünmek = Look good
-İlk görüşte aşk
-görüşmek üzere = See you soon</examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>20.4.2015</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -3759,22 +3480,6 @@ açıkça söylemek</examples>
    </card>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
-     <html>yönetmen</html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>director&lt;div>مدیر، سرپرست&lt;/div></html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments></comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>22.4.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
      <html>eş&lt;div>koca&lt;/div>&lt;div>
 &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->karı&lt;!--EndFragment-->&lt;/p>&lt;/div></html>
     </translationdocument>
@@ -3822,24 +3527,6 @@ Burada hala barış yok.</examples>
     <antonyms></antonyms>
     <statistics>
      <dateCreated>24.5.2017</dateCreated>
-    </statistics>
-   </card>
-   <card type="vocabulary" >
-    <translationdocument language="First Language" >
-     <html>tedavi</html>
-    </translationdocument>
-    <translationdocument language="Second Language" >
-     <html>درمان</html>
-    </translationdocument>
-    <examples></examples>
-    <wordtype></wordtype>
-    <comments>AYAKTA TEDAVİ = درمان سرپایی
-YATARAK TEDAVİ = بستری
-Fizik Tedavi = فیزیوتراپی</comments>
-    <synonyms></synonyms>
-    <antonyms></antonyms>
-    <statistics>
-     <dateCreated>25.2.2015</dateCreated>
     </statistics>
    </card>
    <card type="vocabulary" >
@@ -4086,6 +3773,383 @@ Beşiktaş'ın uçağına 3 yıldız eklendi</examples>
     <antonyms></antonyms>
     <statistics>
      <dateCreated>18.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>yönetmen&lt;div>yönetmek&lt;/div></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>director&amp;nbsp;مدیر، سرپرست&lt;br>&lt;div>administer&amp;nbsp;اداره کردن &amp;nbsp;=&amp;nbsp;idare etmek&lt;/div>
+</html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>22.4.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>kural</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>rule, regulation&lt;div>see kral = king&amp;nbsp;&lt;/div></html>
+    </translationdocument>
+    <examples>Kurallarrules insanlar için var.
+Öğretmen okul kuralları hakkında konuşacak.</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>18.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>kral</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>شاه king&amp;nbsp;&lt;div>see kural = rule&lt;/div></html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>23.8.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">sonuç&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">sonuç çıkarmak&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>result&lt;div>to deduce, to conclude&lt;/div></html>
+    </translationdocument>
+    <examples>seçim sonuçları
+sonuç olarak = as a result
+Kesin sonuç = exact result</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>1.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->ummak&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">umut&amp;nbsp;ümit&lt;/p>
+</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>to expect, to hope,&amp;nbsp;beklemek&lt;div>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">امید hope&lt;/p>&lt;div>&lt;br>&lt;/div>&lt;/div></html>
+    </translationdocument>
+    <examples>Umarım bir gün ...
+</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>2.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>eleştirmek&lt;div>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->eleştiri&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">eleştirmen&lt;/p>&lt;/div></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>criticize&amp;nbsp;انتقاد کردن&lt;div>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">criticism&amp;nbsp;انتقاد&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">critic&amp;nbsp;منتقد&lt;/p>&lt;/div></html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>15.12.2015</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->eğlenmek&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>fun</html>
+    </translationdocument>
+    <examples>sadece eğlenmek için
+bugün eğlenmemiz gerekiyor
+çok eğlendim = I had so much fun</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>24.6.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görev&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>duty task</html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>13.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->milletvekili&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>member of the parliment</html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>13.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->barış&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">barışmak&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>peace&lt;div>make peace آشتی کردن&lt;/div></html>
+    </translationdocument>
+    <examples>barış antlaşması = peace treaty</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>15.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>ulaşmak</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->&amp;nbsp;to reach,&amp;nbsp;yetişmek&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">? =&amp;nbsp;erişmek&lt;/p></html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>21.8.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>erişmek</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->to access, to reach&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">? =&amp;nbsp;ulaşmak&lt;/p></html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>25.9.2015</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->güç&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">güçlü&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>power قدرت&lt;div>güçlü = قوی =&amp;nbsp;kuvvetli&lt;/div></html>
+    </translationdocument>
+    <examples>Bilgi güçtür = Knowledge is power.
+</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>1.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">rüşvet (almak, vermek)&lt;/p> &lt;p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>رشوه&lt;div>bribe,&amp;nbsp;bribery&lt;/div></html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>18.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">geniş (adj)&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">genişlemek&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->genişletmek&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>&lt;div>&lt;span class="Apple-style-span" style="font-size: small;">geniş =&amp;nbsp;جادار، گسترده، عریض&lt;/span>&lt;/div>&lt;div>&lt;span class="Apple-style-span" style="font-size: small;">&lt;br>&lt;/span>&lt;/div>&lt;div>&lt;span class="Apple-style-span" style="font-size: small;">genişlemek =&amp;nbsp;to expand, to widen,&amp;nbsp;geniş duruma gelmek,&amp;nbsp;büyümek&lt;/span>&lt;/div> &lt;div>&lt;span class="Apple-style-span" style="font-size: small;">گسترش یافتن&amp;nbsp;&lt;/span>&lt;/div>&lt;div> &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span class="Apple-style-span" style="font-size: small;">&lt;br>&lt;/span>&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span class="Apple-style-span" style="font-size: small;">&amp;nbsp;genişletmek =&amp;nbsp;make (something) spread out,&amp;nbsp;geniş duruma getirmek,&amp;nbsp;büyültmek&lt;/span>&lt;/p> &lt;/div>&lt;div>&lt;p>&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span class="Apple-style-span" style="font-size: small;">گسترش دادن&lt;/span>&lt;/p>&lt;/div></html>
+    </translationdocument>
+    <examples>genişleme politikası</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>25.9.2015</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>ancak</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>but, however</html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>19.8.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>tedavi (etmek)</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>&lt;div style="direction: rtl;">درمان (کردن)&lt;/div></html>
+    </translationdocument>
+    <examples>ayakta tedavi
+O tedavi altındadır</examples>
+    <wordtype></wordtype>
+    <comments>AYAKTA TEDAVİ = درمان سرپایی
+YATARAK TEDAVİ = بستری
+Fizik Tedavi = فیزیوتراپی</comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>25.2.2015</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>sınav</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>exam&lt;div>&lt;br>&lt;/div></html>
+    </translationdocument>
+    <examples>sınav yapmak
+yazılı/sözlü sınav
+ara sınav = midterm</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>20.10.2015</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->eğitim&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">eğitimsiz&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->Education&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"> &lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&amp;nbsp;Uneducated = بی سواد&amp;nbsp;&lt;!--EndFragment-->&lt;/p>&lt;p>&lt;/p></html>
+    </translationdocument>
+    <examples>milli eğitim bakanlığı
+görsel eğitim
+askeri eğitim
+</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>11.6.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->örnek&lt;/p> &lt;p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>&lt;div>&amp;nbsp;= misal&lt;/div>exmple, sample&lt;div>مثال&lt;/div></html>
+    </translationdocument>
+    <examples>Bu çok iyi bir örnek!
+Bir örnek veriyorum.</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>11.6.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->belirtmek&lt;!--EndFragment-->&lt;/p></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>indicate, clarify, specify&lt;div>görüş belirtmek =&amp;nbsp;Give an opinion&lt;/div>&lt;div>اظهار نظر کردن&lt;/div></html>
+    </translationdocument>
+    <examples></examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>24.7.2017</dateCreated>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>görmek&lt;div> &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"> &lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görünmek&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"> &lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görüşmek&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">görüşi&lt;/p>&lt;p>&lt;/p>&lt;!--EndFragment-->&lt;p>&lt;/p>&lt;/div></html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>görmek =&amp;nbsp;دیدن&lt;div> &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görünmek = دیده شدن = be seen,&amp;nbsp;to appear, come into sight&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;!--StartFragment-->görüşmek&amp;nbsp;= to visit each other&lt;!--EndFragment-->&lt;/p>&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">görüşi = view, opinion - vision&lt;/p>&lt;p>&lt;/p> &lt;/div></html>
+    </translationdocument>
+    <examples>rüya görmek = رویا دیدن
+çok iyi görünmek = Look good
+İlk görüşte aşk
+görüşmek üzere = See you soon
+siyasi görü
+Görüş mesafesi = فاصله دید</examples>
+    <wordtype></wordtype>
+    <comments></comments>
+    <synonyms></synonyms>
+    <antonyms></antonyms>
+    <statistics>
+     <dateCreated>20.4.2015</dateCreated>
     </statistics>
    </card>
   </stage>
