@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     //info text box
     private TextView editText_wordcnt;
+    private TextView editText_progress;
     private TextView editText_flashcard_name;
 
     //buttons
@@ -92,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
         //info text box
         editText_wordcnt = (TextView) findViewById(R.id.editText_wordcnt);
+        editText_progress = (TextView) findViewById(R.id.editText_progress);
         editText_flashcard_name = (TextView) findViewById(R.id.editText_flashcard_name);
-
 
         //progress bars
         progressBar_open = (ProgressBar) findViewById(R.id.progressBar_open);
@@ -209,7 +210,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(final View v) {
 
             Intent study_act = new Intent(MainActivity.this, StudyActivity.class);
-            startActivity(study_act);
+            startActivityForResult(study_act,0);
+            update_text_boxes(); //Todo: run with a delay after activity finish?! why?
 
         } //onClick
     }; //button_start_OnClickListener
@@ -230,8 +232,8 @@ public class MainActivity extends AppCompatActivity {
 
             //Clear File Info on TextBoxes
             editText_wordcnt.setText("0");
+            editText_progress.setText("0 %");
             editText_flashcard_name.setText("-");
-
 
         } //onClick
     }; //button_start_OnClickListener
@@ -311,6 +313,18 @@ public class MainActivity extends AppCompatActivity {
     }//getFlashcard
 
 
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    public void update_text_boxes(){
+        editText_wordcnt.setText(String.valueOf(my_fc_col.total_card_num - my_fc_col.stage_list[0].card_count)); //show only active card count
+        editText_progress.setText(String.valueOf(my_fc_col.user_progress_value) + " %");
+        editText_flashcard_name.setText(my_fc_col.box_name);
+        return;
+    }
+
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -372,8 +386,7 @@ public class MainActivity extends AppCompatActivity {
             if (result) {
                 my_fc_col.Check_integrity();
                 //Print File Info on TextBoxes
-                editText_wordcnt.setText(String.valueOf(my_fc_col.total_card_num));
-                editText_flashcard_name.setText(my_fc_col.box_name);
+                update_text_boxes();
                 button_save_close.setEnabled(true);
                 button_reset.setEnabled(true);
                 button_start.setEnabled(true);
@@ -430,6 +443,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Clear File Info on TextBoxes
                 editText_wordcnt.setText("0");
+                editText_progress.setText("0 %");
                 editText_flashcard_name.setText("-");
 
                 //Dialog for "Saved Successfully".
@@ -516,3 +530,4 @@ public class MainActivity extends AppCompatActivity {
 //TODO: add pronunciation.
 //TODO: add comment for each card
 //TODO: add explanations and text in readme.txt about scheduling algorithm.
+//TODO: when there is no card to review, show "waiting day for next card".

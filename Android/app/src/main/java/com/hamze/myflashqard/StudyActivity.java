@@ -133,6 +133,7 @@ public class StudyActivity extends Activity {
         @Override
         public void onClick(final View v) {
 
+            my_fc_col.update_card_count();
             //the current state of my_fc_col is not touched.
             StudyActivity.this.finish();
             return;

@@ -12,6 +12,7 @@ public class stage {
 
     public int stage_type; // -1: inactive, 0: stack  1: active stage.  all inactive stages should be at the end of list.
     public LinkedList<vocabulary_card> cards;
+    public int card_count;
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -21,6 +22,7 @@ public class stage {
         stage_type = -1; //set to inactive
         cards = new LinkedList<vocabulary_card>();
         cards.clear();
+        card_count = 0;
     }
 
 

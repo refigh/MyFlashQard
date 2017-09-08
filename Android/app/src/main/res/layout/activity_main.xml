@@ -94,6 +94,27 @@
 
             <TableRow
                 android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:text="پیشرفت" />
+
+                <EditText
+                    android:id="@+id/editText_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:text="0 %" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <Button
@@ -174,11 +195,14 @@
                 android:editable="false"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="بدون اجازه منتشر نشود. نسخه 1.11" />
+                android:text="بدون اجازه منتشر نشود. نسخه 1.12" />
 
 
         </TableLayout>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </FrameLayout>

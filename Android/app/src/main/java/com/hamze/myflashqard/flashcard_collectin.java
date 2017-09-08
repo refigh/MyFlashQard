@@ -26,6 +26,7 @@ public class flashcard_collectin {
 
     //constants
 
+    //TODO: what if the file has more stage than MAX_STAGE_NUM number? program craches!
     //0 : inactive cards(stack)
     //1 : new and un-reviewed stage cards
     //2...MAX_STAGE_NUM-2 (MAX_STAGE_NUM-3 number): cards under review
@@ -66,10 +67,13 @@ public class flashcard_collectin {
     private String flashqardversion;
 
     public String box_name;
-    public int total_card_num;
-
 
     public stage[] stage_list; // each stage includes a list of cards
+
+    //total card num (stack + active stages). we do not expect any card to be in inactive stages.
+    public int total_card_num;
+    public int user_progress_value; //MAX =  MAX_STAGE_NUM * number_of_active_cards
+
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -84,6 +88,7 @@ public class flashcard_collectin {
         flashqardversion = "";
         box_name = "";
         total_card_num = 0;
+        user_progress_value = 0;
         IsOpen = false;
         file_path = "";
 
@@ -313,7 +318,7 @@ public class flashcard_collectin {
                 eventType = xpp.next(); //read next XML token from XML file.
 
             }//while
-            total_card_num = card_cnt;
+            update_card_count();
 
             //close the files
             in_strm.close();
@@ -505,6 +510,7 @@ public class flashcard_collectin {
 
         //TODO: check all cards inside any stage, except stage 0 & 1, are sorted by last correct answer time.
 
+        //TODO: no card should be in inactive stages.
         return true;
     }// Check_integrity
 
@@ -522,12 +528,14 @@ public class flashcard_collectin {
         flashqardversion = "";
         box_name = "";
         total_card_num = 0;
+        user_progress_value = 0;
         IsOpen = false;
         file_path = "";
 
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
             stage_list[i].stage_type = -1; //inactive
             stage_list[i].cards.clear(); // clear the link list in each stage
+            stage_list[i].card_count = 0;
         }
 
 
@@ -589,6 +597,49 @@ public class flashcard_collectin {
     }
 
 
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // cont number of cards in stack/stage and update related variables.
+    public Boolean update_card_count() {
+
+        /*
+        //flash card should be opened first
+        if (!IsOpen) {
+            error_obj.set_error_code(1); //"No flashcard open"
+            return false;
+        }*/
+
+        // initialize to zero
+        total_card_num = 0;
+        user_progress_value = 0;
+        for (int i = 0; i < MAX_STAGE_NUM; i++) {
+            stage_list[i].card_count = 0;
+        }
+
+        //count cards (stack+active stage.). we do not expect any card to be in inactive stages.
+        for (int i = 0; i < MAX_STAGE_NUM; i++) {
+            if (stage_list[i].stage_type == -1)
+                break;
+            stage_list[i].card_count = stage_list[i].cards.size();
+            total_card_num += stage_list[i].card_count;
+        }
+
+        //user progress value:
+        for (int i = 2; i < MAX_STAGE_NUM; i++) {
+            if (stage_list[i].stage_type == -1)
+                break;
+            user_progress_value += (stage_list[i].card_count)*(i-1);
+        }
+        user_progress_value = (int) Math.floor((user_progress_value * 100.0) / ((total_card_num - stage_list[0].card_count ) * (MAX_STAGE_NUM-2) ));
+        return true;
+    }
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // get functions
     public static int getMaxStageNum() {
         return MAX_STAGE_NUM;
     }
