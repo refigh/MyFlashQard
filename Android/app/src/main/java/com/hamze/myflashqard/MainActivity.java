@@ -47,11 +47,15 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar_save;
     private ProgressBar progressBar_reset;
 
-    //keep current context in static field, so other statics can access it.
+    // keep current context in static field, so other statics can access it.
     // read more: https://stackoverflow.com/questions/4391720/how-can-i-get-a-resource-content-from-a-static-context
     private static Context mContext;
 
 
+    // Add a different request code for every activity you are starting from here
+    private static final int SECOND_ACTIVITY_RESULT_CODE = 0;
+
+    //normal variables
     private int count = 1;
 
 
@@ -210,11 +214,30 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(final View v) {
 
             Intent study_act = new Intent(MainActivity.this, StudyActivity.class);
-            startActivityForResult(study_act,0);
-            update_text_boxes(); //Todo: run with a delay after activity finish?! why?
+            startActivityForResult(study_act, SECOND_ACTIVITY_RESULT_CODE);
 
         } //onClick
     }; //button_start_OnClickListener
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // This method is called when the second activity finishes
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SECOND_ACTIVITY_RESULT_CODE) {
+            if (resultCode == RESULT_OK) {
+                //String result=data.getStringExtra("result");
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+                update_text_boxes();
+            }
+        }
+    }//onActivityResult
 
 
     //----------------------------------------------------------------------------------------
@@ -228,12 +251,11 @@ public class MainActivity extends AppCompatActivity {
             disable_interface();
 
             my_fc_col.close();
-            button_open.setEnabled(true);
 
             //Clear File Info on TextBoxes
-            editText_wordcnt.setText("0");
-            editText_progress.setText("0 %");
-            editText_flashcard_name.setText("-");
+            update_text_boxes();
+
+            button_open.setEnabled(true);
 
         } //onClick
     }; //button_start_OnClickListener
@@ -313,11 +335,10 @@ public class MainActivity extends AppCompatActivity {
     }//getFlashcard
 
 
-
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    public void update_text_boxes(){
+    public void update_text_boxes() {
         editText_wordcnt.setText(String.valueOf(my_fc_col.total_card_num - my_fc_col.stage_list[0].card_count)); //show only active card count
         editText_progress.setText(String.valueOf(my_fc_col.user_progress_value) + " %");
         editText_flashcard_name.setText(my_fc_col.box_name);
@@ -439,12 +460,10 @@ public class MainActivity extends AppCompatActivity {
             if (result) {
 
                 my_fc_col.close();
-                button_open.setEnabled(true);
-
                 //Clear File Info on TextBoxes
-                editText_wordcnt.setText("0");
-                editText_progress.setText("0 %");
-                editText_flashcard_name.setText("-");
+                update_text_boxes();
+
+                button_open.setEnabled(true);
 
                 //Dialog for "Saved Successfully".
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -497,6 +516,8 @@ public class MainActivity extends AppCompatActivity {
             load_interface_enable_status();
 
             if (result) {
+                update_text_boxes();
+
                 //Dialog for "Reset Successfully".
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 mBuilder.setIcon(android.R.drawable.checkbox_on_background);

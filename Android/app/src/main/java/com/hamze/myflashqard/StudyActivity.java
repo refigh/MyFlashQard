@@ -1,6 +1,7 @@
 package com.hamze.myflashqard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -132,10 +133,13 @@ public class StudyActivity extends Activity {
     final View.OnClickListener button_close_study_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
+            //study session is clossed, but the current state of my_fc_col is not touched.
 
             my_fc_col.update_card_count();
-            //the current state of my_fc_col is not touched.
-            StudyActivity.this.finish();
+
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_CANCELED, returnIntent);
+            finish();   //StudyActivity.this.finish();
             return;
 
         } //onClick

@@ -195,7 +195,7 @@
                 android:editable="false"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="بدون اجازه منتشر نشود. نسخه 1.12" />
+                android:text="بدون اجازه منتشر نشود. نسخه 1.13" />
 
 
         </TableLayout>

@@ -24,7 +24,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 //A flash card collection is kept in an object of this class.
 public class flashcard_collectin {
 
-    //constants
+    //Constants
 
     //TODO: what if the file has more stage than MAX_STAGE_NUM number? program craches!
     //0 : inactive cards(stack)
@@ -34,7 +34,7 @@ public class flashcard_collectin {
     private static final int MAX_STAGE_NUM = 8; //min = 4, Max = 10 (due to Ratingbar presentation issue)
     private long[] MIN_REVIEW_TIME; //defined for each stage. unit: millisecond
 
-    //XML tags and attributes (shorter tags can be replaced for more file compression.
+    //XML tags and attributes (shorter tags can be replaced for file compression.
     //TODO: simplify XML tag names to reduce file size.
     private static final String TG_TRD = "translationdocument";
     private static final String TG_USR_WT = "userdefinedwordtype";
@@ -68,18 +68,19 @@ public class flashcard_collectin {
 
     public String box_name;
 
-    public stage[] stage_list; // each stage includes a list of cards
+    //cards date. Each stage includes a list of cards
+    public stage[] stage_list;
 
     //total card num (stack + active stages). we do not expect any card to be in inactive stages.
     public int total_card_num;
-    public int user_progress_value; //MAX =  MAX_STAGE_NUM * number_of_active_cards
+    public int user_progress_value; //MAX =  number_of_active_cards * (MAX_STAGE_NUM-2)
 
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // Constructor
-    flashcard_collectin() { //Context context) {
+    flashcard_collectin() {
         authoremail = "";
         license = "";
         author = "";
@@ -92,21 +93,24 @@ public class flashcard_collectin {
         IsOpen = false;
         file_path = "";
 
+        //Creating empty stage list and cards
         stage_list = new stage[MAX_STAGE_NUM];
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
             stage_list[i] = new stage();
         }
 
+        //Generate the MIN_REVIEW_TIME array
         MIN_REVIEW_TIME = new long[MAX_STAGE_NUM];
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            //values for state 0,1 and Final are not important
-            // x, x, 1, 3, ....
+            //values for state 0,1 and Final are not important (X:dont care)
+            // X, X, 1, 3, 9,  ....
             long number_of_days = (long) Math.pow(3, (i - 2));
             MIN_REVIEW_TIME[i] = number_of_days * 24 * 60 * 60 * 1000; //convert from day to millisecond;
             MIN_REVIEW_TIME[i] -= 1000000; //reduce a small number for avoid marginal calculation problem.
         }
 
     }// constructor
+
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -475,9 +479,8 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // shuffle all cards in each stage/stack
+    // Shuffle all cards in each stage/stack //TODO: take care of time order in stage >= 2
     public void shuffle(int mode) { //mode=  1:all stack and stages   2:only stages
-
         int stg_cnt = 0;
         if (mode == 1)
             stg_cnt = 0; //including stack
@@ -518,7 +521,7 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    //clear data and close the open flashcard
+    //Close the currently open flashcard
     public void close() {
         authoremail = "";
         license = "";
@@ -538,16 +541,16 @@ public class flashcard_collectin {
             stage_list[i].card_count = 0;
         }
 
-
         return;
     }// close
 
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // reset statistics of open flash file it includes below steps:
-    // 1-delete file on external memory, if exists
-    // 2-reload file from asset
+    // Reset user's statistics for a flash card:
+    // 1-delete user file (on external memory, if exists)
+    // 2-reload file from asset to external memory.
     public Boolean reset(error error_obj) {
 
         //flash card should be opened first
@@ -594,13 +597,13 @@ public class flashcard_collectin {
             return false;
 
         return true;
-    }
+    }//reset
 
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // cont number of cards in stack/stage and update related variables.
+    // Count number of cards in each stack/stage and update related variables.
     public Boolean update_card_count() {
 
         /*
@@ -639,7 +642,7 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // get functions
+    // Get functions
     public static int getMaxStageNum() {
         return MAX_STAGE_NUM;
     }
