@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
 public class MainActivity extends AppCompatActivity {
 
     //info text box
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private Button button_reset;
     private Button button_start;
     private Button button_Nosave_close;
+    private Button button_connect_dropbox;
+    private Button button_download;
+    private Button button_upload;
 
     private Button[] all_buttons; //initiate it after initiation of above buttons
     private Boolean[] all_buttons_enable_status;
@@ -59,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
     private int count = 1;
 
 
+    //dropbox object
+    private static dropbox dropbox_obj;
+
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         button_open = (Button) findViewById(R.id.button_open);
         button_open.setOnClickListener(button_open_OnClickListener);
 
-        //Save flashcard button
+        //save flashcard button
         button_save_close = (Button) findViewById(R.id.button_save_close);
         button_save_close.setOnClickListener(button_save_close_close_OnClickListener);
 
@@ -88,9 +96,21 @@ public class MainActivity extends AppCompatActivity {
         button_Nosave_close = (Button) findViewById(R.id.button_Nosave_close);
         button_Nosave_close.setOnClickListener(button_Nosave_close_OnClickListener);
 
+        //connect to internet forlder
+        button_connect_dropbox = (Button) findViewById(R.id.button_connect_dropbox);
+        button_connect_dropbox.setOnClickListener(button_connect_dropbox_OnClickListener);
+
+        //download from internet folder
+        button_download = (Button) findViewById(R.id.button_download);
+        button_download.setOnClickListener(button_download_OnClickListener);
+
+        //upload to internet folder
+        button_upload = (Button) findViewById(R.id.button_upload);
+        button_upload.setOnClickListener(button_upload_OnClickListener);
+
 
         //all buttons
-        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close};
+        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close, button_connect_dropbox, button_download, button_upload};
         all_buttons_enable_status = new Boolean[all_buttons.length];
         for (Boolean b : all_buttons_enable_status)
             b = false;
@@ -114,6 +134,24 @@ public class MainActivity extends AppCompatActivity {
         permission_request();
 
     }//onCreate
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //dropbox successfully connected
+        if (dropbox_obj.dropbox_finish_authentication(error_obj)) {
+            button_download.setEnabled(true);
+            button_upload.setEnabled(true);
+        } else {
+            error_dialog(error_obj);
+        }
+
+
+    }
 
 
     //----------------------------------------------------------------------------------------
@@ -532,6 +570,47 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }//SaverTaskClass
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for button_connect_dropbox
+    final View.OnClickListener button_connect_dropbox_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+            // initialize Dropbox session
+            dropbox_obj.dropbox_initialize_session();
+
+        } //onClick
+    }; //button_connect_dropbox_OnClickListener
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for button_download
+    final View.OnClickListener button_download_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+
+        } //onClick
+    }; //button_download_OnClickListener
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for button_upload
+    final View.OnClickListener button_upload_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+
+        } //onClick
+    }; //button_upload_OnClickListener
 
 
 }//public class MainActivity

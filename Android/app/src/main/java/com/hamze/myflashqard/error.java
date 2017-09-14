@@ -28,7 +28,7 @@ public class error {
         error_description[11] = "already open. close it first!";
         error_description[12] = "Error in accessing the file";
         error_description[13] = "File can not be deleted";
-        error_description[14] = "";
+        error_description[14] = "Cannot authenticate to Dropbox";
         error_description[15] = "";
         error_description[16] = "";
         error_description[17] = "";
