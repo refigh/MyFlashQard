@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button_download;
     private Button button_upload;
 
+    //Todo: it does not include Dropbox buttons, later rename it properly
     private Button[] all_buttons; //initiate it after initiation of above buttons
     private Boolean[] all_buttons_enable_status;
 
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar_open;
     private ProgressBar progressBar_save;
     private ProgressBar progressBar_reset;
+    private ProgressBar progressBar_upload;
+    private ProgressBar progressBar_download;
 
     // keep current context in static field, so other statics can access it.
     // read more: https://stackoverflow.com/questions/4391720/how-can-i-get-a-resource-content-from-a-static-context
@@ -62,10 +65,25 @@ public class MainActivity extends AppCompatActivity {
     //normal variables
     private int count = 1;
 
-
     //dropbox object
-    private static dropbox dropbox_obj;
+    private dropbox my_dropbox;
 
+
+    private final CharSequence fq_names[] = new CharSequence[]{
+            "English",
+            "Turkish",
+            "Test1",
+            "Test2",
+            "NoExist"
+    };
+
+    private final CharSequence fq_files[] = new CharSequence[]{
+            "english_vocab.fq",
+            "turkish.fq",
+            "test_set_01.fq",
+            "test_set_02.fq",
+            "NoExitTest"
+    };
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -110,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //all buttons
-        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close, button_connect_dropbox, button_download, button_upload};
+        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close}; //, button_connect_dropbox, button_download, button_upload};
         all_buttons_enable_status = new Boolean[all_buttons.length];
         for (Boolean b : all_buttons_enable_status)
             b = false;
@@ -124,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar_open = (ProgressBar) findViewById(R.id.progressBar_open);
         progressBar_save = (ProgressBar) findViewById(R.id.progressBar_save);
         progressBar_reset = (ProgressBar) findViewById(R.id.progressBar_reset);
-
+        progressBar_upload = (ProgressBar) findViewById(R.id.progressBar_upload);
+        progressBar_download = (ProgressBar) findViewById(R.id.progressBar_download);
 
         // keep current context
         mContext = MainActivity.this;
@@ -132,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
         // request for application permission at run time.
         // Note that permissions should be set inside AndroidManifest.xml file beforehand too.
         permission_request();
+
+        //dropbox object
+        my_dropbox = new dropbox();
+
 
     }//onCreate
 
@@ -142,16 +165,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //dropbox successfully connected
-        if (dropbox_obj.dropbox_finish_authentication(error_obj)) {
-            button_download.setEnabled(true);
-            button_upload.setEnabled(true);
-        } else {
-            error_dialog(error_obj);
+
+        //resume Dropbox authentication.
+        if (my_dropbox.isInitilized_started()) {
+            //dropbox successfully connected
+            if (my_dropbox.dropbox_finish_authentication(error_obj)) {
+                button_download.setEnabled(true);
+                button_upload.setEnabled(true);
+            } else {
+                error_dialog(error_obj);
+            }
         }
 
 
-    }
+    }//onResume
 
 
     //----------------------------------------------------------------------------------------
@@ -161,22 +188,6 @@ public class MainActivity extends AppCompatActivity {
     final View.OnClickListener button_open_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
-
-            final CharSequence fq_names[] = new CharSequence[]{
-                    "English",
-                    "Turkish",
-                    "Test1",
-                    "Test2",
-                    "NoExist"
-            };
-
-            final CharSequence fq_files[] = new CharSequence[]{
-                    "english_vocab.fq",
-                    "turkish.fq",
-                    "test_set_01.fq",
-                    "test_set_02.fq",
-                    "NoExitTest"
-            };
 
             //Dialog for selecting one file
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -575,13 +586,128 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
+    class DownloadTaskClass extends AsyncTask<CharSequence[], Integer, Boolean> { //params, progress, result
+
+        @Override
+        protected void onPreExecute() {
+            //txt.setText("Task Starting...");
+            progressBar_download.setVisibility(ProgressBar.VISIBLE);
+            save_interface_enable_status();
+            disable_interface();
+            button_connect_dropbox.setEnabled(false);
+            button_download.setEnabled(false);
+            button_upload.setEnabled(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(CharSequence[]... params) {
+            /*
+            publishProgress(50);
+            */
+            return (my_dropbox.dropbox_download(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //txt.setText("Running..." + values[0]);
+            //progressBar_download.setProgress(values[0]);
+            //TODO: add this part for download
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            progressBar_download.setVisibility(ProgressBar.INVISIBLE);
+            load_interface_enable_status();
+            button_connect_dropbox.setEnabled(true);
+            button_download.setEnabled(true);
+            button_upload.setEnabled(true);
+
+            if (result) {
+
+                //Dialog for "downloaded Successfully".
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                mBuilder.setIcon(android.R.drawable.checkbox_on_background);
+                mBuilder.setTitle(" ");
+                mBuilder.setMessage("downloaded Successfully");
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
+            } else {
+                error_dialog(error_obj);
+            }
+        }
+
+    }//DownloadTaskClass
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    class UploadTaskClass extends AsyncTask<CharSequence[], Integer, Boolean> { //params, progress, result
+
+        @Override
+        protected void onPreExecute() {
+            //txt.setText("Task Starting...");
+            progressBar_upload.setVisibility(ProgressBar.VISIBLE);
+            save_interface_enable_status();
+            disable_interface();
+            button_connect_dropbox.setEnabled(false);
+            button_download.setEnabled(false);
+            button_upload.setEnabled(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(CharSequence[]... params) {
+            /*
+            publishProgress(50);
+            */
+            return (my_dropbox.dropbox_upload(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //txt.setText("Running..." + values[0]);
+            //progressBar_upload.setProgress(values[0]);
+            //TODO: add this part for upload
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            progressBar_upload.setVisibility(ProgressBar.INVISIBLE);
+            load_interface_enable_status();
+            button_connect_dropbox.setEnabled(true);
+            button_download.setEnabled(true);
+            button_upload.setEnabled(true);
+
+            if (result) {
+                //Dialog for "uploaded Successfully".
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                mBuilder.setIcon(android.R.drawable.checkbox_on_background);
+                mBuilder.setTitle(" ");
+                mBuilder.setMessage("Uploaded Successfully");
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
+            } else {
+                error_dialog(error_obj);
+            }
+        }
+
+    }//UploadTaskClass
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     //On click listener for button_connect_dropbox
     final View.OnClickListener button_connect_dropbox_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
 
             // initialize Dropbox session
-            dropbox_obj.dropbox_initialize_session();
+            my_dropbox.dropbox_initialize_session();
 
         } //onClick
     }; //button_connect_dropbox_OnClickListener
@@ -595,6 +721,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(final View v) {
 
+            //show a confirmation dialog before run.
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Download data")
+                    .setMessage("Download may overwrite your data. Continue?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //run a AsyncTask (a kind of thread) for downloading. Because it takes some seconds.
+                            // it includes delete of file, and re-open the flash file
+                            DownloadTaskClass my_downloader_task = new DownloadTaskClass();
+                            my_downloader_task.execute(fq_files ); // execute(Params...). pass parameter to task.
+                        }//onClick
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
 
         } //onClick
     }; //button_download_OnClickListener
@@ -608,6 +750,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(final View v) {
 
+            //show a confirmation dialog before run.
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Upload data")
+                    .setMessage("Upload may overwrite your data. Continue?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //run a AsyncTask (a kind of thread) for uploading. Because it takes some seconds.
+                            // it includes delete of file, and re-open the flash file
+                            UploadTaskClass my_uploader_task = new UploadTaskClass();
+                            my_uploader_task.execute( fq_files ); // execute(Params...). pass parameter to task.
+                        }//onClick
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
 
         } //onClick
     }; //button_upload_OnClickListener
@@ -631,3 +789,4 @@ public class MainActivity extends AppCompatActivity {
 //TODO: add comment for each card
 //TODO: add explanations and text in readme.txt about scheduling algorithm.
 //TODO: when there is no card to review, show "waiting day for next card".
+//TODO: some texboxes should not be editable.

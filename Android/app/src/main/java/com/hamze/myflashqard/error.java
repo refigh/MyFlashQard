@@ -12,7 +12,7 @@ public class error {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // Constructor
-    error() {
+    error() { //TODO: sort the errors by type
         error_description = new String[32];
         error_description[0] = "No Error!";
         error_description[1] = "No flashcard open";
@@ -29,11 +29,11 @@ public class error {
         error_description[12] = "Error in accessing the file";
         error_description[13] = "File can not be deleted";
         error_description[14] = "Cannot authenticate to Dropbox";
-        error_description[15] = "";
-        error_description[16] = "";
-        error_description[17] = "";
-        error_description[18] = "";
-        error_description[19] = "";
+        error_description[15] = "Before upload/download, connect to Dropbox first";
+        error_description[16] = "Error in Dropbox or file access during upload";
+        error_description[17] = "File can not be uploaded";
+        error_description[18] = "File can not be renamed";
+        error_description[19] = "Error in Dropbox or file access during download";
         error_description[20] = "";
         error_description[21] = "";
         error_description[22] = "";

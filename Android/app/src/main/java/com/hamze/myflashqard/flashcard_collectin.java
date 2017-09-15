@@ -651,4 +651,8 @@ public class flashcard_collectin {
         return MIN_REVIEW_TIME[i];
     }
 
+    public static String getFolderNameOnStorage() {
+        return FOLDER_NAME_ON_STORAGE;
+    }
+
 }

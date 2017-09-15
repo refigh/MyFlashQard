@@ -23,17 +23,6 @@
             android:layout_weight="1"
             android:text="انتخاب مجموعه کارت" />
 
-        <ProgressBar
-            android:id="@+id/progressBar_open"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:indeterminate="true"
-            android:max="100"
-            android:progress="0"
-            android:visibility="invisible" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -41,6 +30,35 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressBar_open"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:indeterminate="true"
+            android:max="100"
+            android:progress="0"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editText_flashcard_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:elevation="1dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="-"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/editText4"
@@ -53,16 +71,6 @@
             android:text="نام مجموعه"
             tools:editable="false" />
 
-        <EditText
-            android:id="@+id/editText_flashcard_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="1dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="-" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -72,30 +80,14 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editText2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:editable="false"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="تعداد کارت ها" />
-
-        <EditText
-            android:id="@+id/editText_wordcnt"
+            android:id="@+id/editText_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+            android:text="0 %"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/editText3"
@@ -107,13 +99,25 @@
             android:text="پیشرفت" />
 
         <EditText
-            android:id="@+id/editText_progress"
+            android:id="@+id/editText_wordcnt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0 %" />
+            android:text="0"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:editable="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="تعداد کارت ها" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -125,21 +129,26 @@
         <Button
             android:id="@+id/button_reset"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="false"
             android:text="از نو کردن مجموعه" />
 
-        <ProgressBar
-            android:id="@+id/progressBar_reset"
-            style="@style/Widget.AppCompat.ProgressBar"
+        <Button
+            android:id="@+id/button_Nosave_close"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:indeterminate="true"
-            android:max="100"
-            android:progress="0"
-            android:visibility="invisible" />
+            android:enabled="false"
+            android:text="ذخیره نکن و ببند" />
+
+        <Button
+            android:id="@+id/button_save_close"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="ذخیره کن و ببند" />
 
     </LinearLayout>
 
@@ -149,13 +158,24 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_save_close"
+        <ProgressBar
+            android:id="@+id/progressBar_reset"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:enabled="false"
-            android:text="ذخیره کن و ببند" />
+            android:indeterminate="true"
+            android:max="100"
+            android:progress="0"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_dummy1"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible" />
 
         <ProgressBar
             android:id="@+id/progressBar_save"
@@ -167,13 +187,13 @@
             android:visibility="invisible" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_Nosave_close"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:enabled="false"
-        android:text="ذخیره نکن و ببند" />
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -182,27 +202,61 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_connect_dropbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Dropbox" />
-
-        <Button
             android:id="@+id/button_download"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="Download" />
+            android:text="بارگیری" />
 
         <Button
             android:id="@+id/button_upload"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="Upload" />
+            android:text="بارگذاری" />
+
+        <Button
+            android:id="@+id/button_connect_dropbox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="اتصال به دراپباکس" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressBar_download"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_upload"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_dummy2"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <Button
