@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private Button button_reset;
     private Button button_start;
     private Button button_Nosave_close;
-    private Button button_connect_dropbox;
-    private Button button_download;
-    private Button button_upload;
+    private ImageButton button_connect_dropbox;
+    private ImageButton button_download;
+    private ImageButton button_upload;
 
     //Todo: it does not include Dropbox buttons, later rename it properly
     private Button[] all_buttons; //initiate it after initiation of above buttons
@@ -115,15 +116,15 @@ public class MainActivity extends AppCompatActivity {
         button_Nosave_close.setOnClickListener(button_Nosave_close_OnClickListener);
 
         //connect to internet forlder
-        button_connect_dropbox = (Button) findViewById(R.id.button_connect_dropbox);
+        button_connect_dropbox = (ImageButton) findViewById(R.id.button_connect_dropbox);
         button_connect_dropbox.setOnClickListener(button_connect_dropbox_OnClickListener);
 
         //download from internet folder
-        button_download = (Button) findViewById(R.id.button_download);
+        button_download = (ImageButton) findViewById(R.id.button_download);
         button_download.setOnClickListener(button_download_OnClickListener);
 
         //upload to internet folder
-        button_upload = (Button) findViewById(R.id.button_upload);
+        button_upload = (ImageButton) findViewById(R.id.button_upload);
         button_upload.setOnClickListener(button_upload_OnClickListener);
 
 
@@ -248,7 +249,8 @@ public class MainActivity extends AppCompatActivity {
                             my_reseter_task.execute(0); // execute(Params...)
                         }//onClick
                     })
-                    .setNegativeButton(android.R.string.no, null).show();
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
 
         } //onClick
     }; //button_reset_OnClickListener

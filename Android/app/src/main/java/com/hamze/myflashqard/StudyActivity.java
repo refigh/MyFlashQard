@@ -1,16 +1,22 @@
 package com.hamze.myflashqard;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.text.InputType;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -20,6 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static com.hamze.myflashqard.R.drawable.comment;
 
 
 /**
@@ -33,6 +41,7 @@ public class StudyActivity extends Activity {
     private Button button_close_study;
     private Button button_show;
     private Button button_next;
+    private ImageButton imageButton_comment;
 
     //text boxes
     private TextView textView_side1;
@@ -82,6 +91,11 @@ public class StudyActivity extends Activity {
         //next button
         button_next = (Button) findViewById(R.id.button_next);
         button_next.setOnClickListener(button_next_OnClickListener);
+
+        //comment button
+        imageButton_comment = (ImageButton) findViewById(R.id.imageButton_comment);
+        imageButton_comment.setOnClickListener(imageButton_comment_OnClickListener);
+
 
         //text boxes
         textView_side1 = (TextView) findViewById(R.id.textView_side1);
@@ -310,6 +324,52 @@ public class StudyActivity extends Activity {
 
         } //onClick
     }; //button_next_OnClickListener
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for comment button
+    final View.OnClickListener imageButton_comment_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+            // put comment on currently shown card (if exist).
+            if (Lastcard != null) {
+
+                // Set up text input
+                final EditText input = new EditText(StudyActivity.this);
+                input.setSingleLine(false);
+                input.setLines(4);
+                input.setMaxLines(5);
+                input.setGravity(Gravity.LEFT | Gravity.TOP);
+                input.setHorizontalScrollBarEnabled(false); //this
+
+                String comment = Lastcard.Text_of_comments;
+                comment += "Comment for revision: ";
+                input.setText(comment);
+
+                //show a dialog to get user's comment
+                new AlertDialog.Builder(StudyActivity.this)
+                        .setView(input)
+                        .setTitle("Enter your comment")
+                        //.setMessage("Enter your comment")
+                        //.setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Lastcard.Text_of_comments = input.getText().toString() + "\n\r";
+                            }//onClick
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+            } //manage previously shown card
+
+            return;
+
+        } //onClick
+    }; //imageButton_comment_OnClickListener
 
 
 }//class StudyActivity
