@@ -55,7 +55,7 @@
                 android:background="@drawable/upload_icon" />
 
             <ImageButton
-                android:id="@+id/button_connect_dropbox"
+                android:id="@+id/button_connect_cloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -267,7 +267,7 @@
         android:editable="false"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="بدون اجازه منتشر نشود. نسخه 1.15" />
+        android:text="بدون اجازه منتشر نشود. نسخه 1.16" />
 
 
 </LinearLayout>

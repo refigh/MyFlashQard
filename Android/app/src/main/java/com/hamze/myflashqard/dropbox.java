@@ -21,6 +21,15 @@ import java.io.FileOutputStream;
 //Tutorial 2: https://www.dropbox.com/developers-v1/core/start/android
 //Dropbox document: https://www.dropboxstatic.com/static/developers/dropbox-android-sdk-1.6.3-docs/com/dropbox/client2/DropboxAPI.html
 
+
+/*
+  !!!!!!!!!!!!!
+  This class does not work, we need to upgrade from android dropbox api v1
+  to android dropbox api v2. currently there are not enough document for it.
+  then we ignore it for now.
+*/
+
+
 public class dropbox {
 
     // Replace APP_KEY with your APP_KEY

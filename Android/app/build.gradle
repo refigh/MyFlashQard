@@ -30,8 +30,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
+    
+    // insert kloudless java sdk here from maven
+    compile 'com.kloudless:kloudless-java:1.0.3'
 
-    compile files('libs/dropbox-android-sdk-1.6.3.jar')
+    //compile files('libs/dropbox-android-sdk-1.6.3.jar')
+    
+    // what is this used for? XML parser?
     compile files('libs/json_simple-1.1.jar')
 
     testCompile 'junit:junit:4.12'

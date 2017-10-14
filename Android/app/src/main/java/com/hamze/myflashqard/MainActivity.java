@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private Button button_reset;
     private Button button_start;
     private Button button_Nosave_close;
-    private ImageButton button_connect_dropbox;
+    private ImageButton button_connect_cloud;
     private ImageButton button_download;
     private ImageButton button_upload;
 
-    //Todo: it does not include Dropbox buttons, later rename it properly
+    //Todo: it does not include cloud storage buttons, later rename it properly
     private Button[] all_buttons; //initiate it after initiation of above buttons
     private Boolean[] all_buttons_enable_status;
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private int count = 1;
 
     //dropbox object
-    private dropbox my_dropbox;
+    //private dropbox my_dropbox;
 
 
     private final CharSequence fq_names[] = new CharSequence[]{
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
         button_Nosave_close.setOnClickListener(button_Nosave_close_OnClickListener);
 
         //connect to internet forlder
-        button_connect_dropbox = (ImageButton) findViewById(R.id.button_connect_dropbox);
-        button_connect_dropbox.setOnClickListener(button_connect_dropbox_OnClickListener);
+        button_connect_cloud = (ImageButton) findViewById(R.id.button_connect_cloud);
+        button_connect_cloud.setOnClickListener(button_connect_cloud_OnClickListener);
 
         //download from internet folder
         button_download = (ImageButton) findViewById(R.id.button_download);
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //all buttons
-        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close}; //, button_connect_dropbox, button_download, button_upload};
+        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close}; //, button_connect_cloud, button_download, button_upload};
         all_buttons_enable_status = new Boolean[all_buttons.length];
         for (Boolean b : all_buttons_enable_status)
             b = false;
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         permission_request();
 
         //dropbox object
-        my_dropbox = new dropbox();
+        //my_dropbox = new dropbox();
 
 
     }//onCreate
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
+        /*
         //resume Dropbox authentication.
         if (my_dropbox.isInitilized_started()) {
             //dropbox successfully connected
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 error_dialog(error_obj);
             }
         }
-
+        */
 
     }//onResume
 
@@ -596,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar_download.setVisibility(ProgressBar.VISIBLE);
             save_interface_enable_status();
             disable_interface();
-            button_connect_dropbox.setEnabled(false);
+            button_connect_cloud.setEnabled(false);
             button_download.setEnabled(false);
             button_upload.setEnabled(false);
         }
@@ -606,7 +606,8 @@ public class MainActivity extends AppCompatActivity {
             /*
             publishProgress(50);
             */
-            return (my_dropbox.dropbox_download(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+            //return (my_dropbox.dropbox_download(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+            return ...
         }
 
         @Override
@@ -621,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
 
             progressBar_download.setVisibility(ProgressBar.INVISIBLE);
             load_interface_enable_status();
-            button_connect_dropbox.setEnabled(true);
+            button_connect_cloud.setEnabled(true);
             button_download.setEnabled(true);
             button_upload.setEnabled(true);
 
@@ -654,7 +655,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar_upload.setVisibility(ProgressBar.VISIBLE);
             save_interface_enable_status();
             disable_interface();
-            button_connect_dropbox.setEnabled(false);
+            button_connect_cloud.setEnabled(false);
             button_download.setEnabled(false);
             button_upload.setEnabled(false);
         }
@@ -664,7 +665,8 @@ public class MainActivity extends AppCompatActivity {
             /*
             publishProgress(50);
             */
-            return (my_dropbox.dropbox_upload(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+            //return (my_dropbox.dropbox_upload(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+            return
         }
 
         @Override
@@ -679,7 +681,7 @@ public class MainActivity extends AppCompatActivity {
 
             progressBar_upload.setVisibility(ProgressBar.INVISIBLE);
             load_interface_enable_status();
-            button_connect_dropbox.setEnabled(true);
+            button_connect_cloud.setEnabled(true);
             button_download.setEnabled(true);
             button_upload.setEnabled(true);
 
@@ -703,16 +705,19 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    //On click listener for button_connect_dropbox
-    final View.OnClickListener button_connect_dropbox_OnClickListener = new View.OnClickListener() {
+    //On click listener for button_connect_cloud
+    final View.OnClickListener button_connect_cloud_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
 
-            // initialize Dropbox session
-            my_dropbox.dropbox_initialize_session();
+            // initialize cloud session
+
+            //dropbox not used now.
+            //my_dropbox.dropbox_initialize_session();
+
 
         } //onClick
-    }; //button_connect_dropbox_OnClickListener
+    }; //button_connect_cloud_OnClickListener
 
 
     //----------------------------------------------------------------------------------------
