@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -18,8 +19,19 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.cloudrail.si.CloudRail;
+import com.cloudrail.si.services.Dropbox;
+import com.dropbox.client2.DropboxAPI;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 
 public class MainActivity extends AppCompatActivity {
+
 
     //info text box
     private TextView editText_wordcnt;
@@ -32,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
     private Button button_reset;
     private Button button_start;
     private Button button_Nosave_close;
-    private ImageButton button_connect_dropbox;
+    private ImageButton button_connect_cloud;
     private ImageButton button_download;
     private ImageButton button_upload;
 
-    //Todo: it does not include Dropbox buttons, later rename it properly
+    //Todo: it does not include cloud storage buttons, later rename it properly
     private Button[] all_buttons; //initiate it after initiation of above buttons
     private Boolean[] all_buttons_enable_status;
 
@@ -66,10 +78,6 @@ public class MainActivity extends AppCompatActivity {
     //normal variables
     private int count = 1;
 
-    //dropbox object
-    private dropbox my_dropbox;
-
-
     private final CharSequence fq_names[] = new CharSequence[]{
             "English",
             "Turkish",
@@ -85,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
             "test_set_02.fq",
             "NoExitTest"
     };
+
+    // Cloud storage variables
+    //----------------------------------
+    private final String CLOUDRAIL_KEY = "59e223d6a5a11670ad75c24c"; //Received from CloudRail site
+
+    //Dropbox, get both App Key (Client ID) and App Secret (Client Secret) from dropbox site
+    private final String DROPBOX_REDIRECT_URL = "https://auth.cloudrail.com/com.hamze.myflashqard"; // same as URL set inside dropbox site
+    private final String DROPBOX_CLIENT_ID = "wryp2qsk27carsq";
+    private final String DROPBOX_CLIENT_SECRET = "o3y34w2uassu4bd";
+    private boolean dropbox_is_connected;
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -116,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
         button_Nosave_close.setOnClickListener(button_Nosave_close_OnClickListener);
 
         //connect to internet forlder
-        button_connect_dropbox = (ImageButton) findViewById(R.id.button_connect_dropbox);
-        button_connect_dropbox.setOnClickListener(button_connect_dropbox_OnClickListener);
+        button_connect_cloud = (ImageButton) findViewById(R.id.button_connect_cloud);
+        button_connect_cloud.setOnClickListener(button_connect_cloud_OnClickListener);
 
         //download from internet folder
         button_download = (ImageButton) findViewById(R.id.button_download);
@@ -129,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //all buttons
-        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close}; //, button_connect_dropbox, button_download, button_upload};
+        all_buttons = new Button[]{button_save_close, button_open, button_reset, button_start, button_Nosave_close}; //, button_connect_cloud, button_download, button_upload};
         all_buttons_enable_status = new Boolean[all_buttons.length];
         for (Boolean b : all_buttons_enable_status)
             b = false;
@@ -153,8 +171,10 @@ public class MainActivity extends AppCompatActivity {
         // Note that permissions should be set inside AndroidManifest.xml file beforehand too.
         permission_request();
 
-        //dropbox object
-        my_dropbox = new dropbox();
+        //Cloud storage
+        CloudRail.setAppKey(CLOUDRAIL_KEY);
+        CloudRail.setAdvancedAuthenticationMode(true);
+        dropbox_is_connected = false;
 
 
     }//onCreate
@@ -166,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
+        /*
         //resume Dropbox authentication.
         if (my_dropbox.isInitilized_started()) {
             //dropbox successfully connected
@@ -177,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 error_dialog(error_obj);
             }
         }
-
+        */
 
     }//onResume
 
@@ -588,6 +608,86 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
+    //On click listener for button_connect_cloud
+    final View.OnClickListener button_connect_cloud_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            Cloud_login_Task cloud_login_task = new Cloud_login_Task();
+            cloud_login_task.execute();  //TODO: re-executing cause program crash, why? should use another class for logout?
+        } //onClick
+    }; //button_connect_cloud_OnClickListener
+
+
+    class Cloud_login_Task extends AsyncTask {
+        Context context;
+
+        //constructor
+        public Cloud_login_Task() {
+            context = MainActivity.getContext();
+        } //constructor
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            Dropbox dropbox = new Dropbox(context,
+                    DROPBOX_CLIENT_ID,
+                    DROPBOX_CLIENT_SECRET,
+                    DROPBOX_REDIRECT_URL,
+                    "CLOUD_STATE");
+
+            dropbox.useAdvancedAuthentication();
+
+            // Dropbox Login/Logout
+            if (dropbox_is_connected) {
+                dropbox.logout();
+                dropbox_is_connected = false;
+            } else {
+                dropbox.login();
+                dropbox_is_connected = true;
+            }
+            return null;
+        }//doInBackground
+
+    } // Cloud_login_Task
+
+    //pass browser output to this app
+    private static final String BROWSABLE = "android.intent.category.BROWSABLE";
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent.getCategories().contains(BROWSABLE)) {
+            CloudRail.setAuthenticationResponse(intent);
+        }
+        super.onNewIntent(intent);
+    }
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //On click listener for button_download
+    final View.OnClickListener button_download_OnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+            //show a confirmation dialog before run.
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Download data")
+                    .setMessage("Download may overwrite your data. Continue?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //run a AsyncTask (a kind of thread) for downloading. Because it takes some seconds.
+                            // it includes delete of file, and re-open the flash file
+                            DownloadTaskClass my_downloader_task = new DownloadTaskClass();
+                            my_downloader_task.execute(fq_files); // execute(Params...). pass parameter to task.
+                        }//onClick
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+
+        } //onClick
+    }; //button_download_OnClickListener
+
     class DownloadTaskClass extends AsyncTask<CharSequence[], Integer, Boolean> { //params, progress, result
 
         @Override
@@ -596,7 +696,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar_download.setVisibility(ProgressBar.VISIBLE);
             save_interface_enable_status();
             disable_interface();
-            button_connect_dropbox.setEnabled(false);
+            button_connect_cloud.setEnabled(false);
             button_download.setEnabled(false);
             button_upload.setEnabled(false);
         }
@@ -606,7 +706,118 @@ public class MainActivity extends AppCompatActivity {
             /*
             publishProgress(50);
             */
-            return (my_dropbox.dropbox_download(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+            Dropbox dropbox = new Dropbox(
+                    MainActivity.getContext(),
+                    DROPBOX_CLIENT_ID,
+                    DROPBOX_CLIENT_SECRET,
+                    DROPBOX_REDIRECT_URL,
+                    "CLOUD_STATE");
+
+            dropbox.useAdvancedAuthentication();
+
+            /*
+            if (!dropbox_is_connected) {
+                error_obj.set_error_code(15); //"Before upload/download, connect to Dropbox first"
+                return false;
+            }
+            */
+
+            //first check that Ex-Storage is mounted or not.
+            String storage_state = Environment.getExternalStorageState();
+            if (!storage_state.equals("mounted")) {
+                error_obj.set_error_code(3); //"Ex-Storage not mounted!"
+                return false;
+            }
+
+            File fq_folder = null;
+            File fq_file = null;
+            File fq_file_temp = null;
+            String path_on_dropbox = "";
+            FileOutputStream outputStream = null;
+            String FolderNameOnStorage = my_fc_col.getFolderNameOnStorage();
+
+            String storage_root_path = Environment.getExternalStorageDirectory().getPath();
+            fq_folder = new File(storage_root_path, FolderNameOnStorage);
+            if (!fq_folder.exists()) {
+                if (!fq_folder.mkdirs()) {// this will create folder.
+                    error_obj.set_error_code(4); // "Program folder not created. No storage permission"
+                    return false;
+                }
+            }
+
+            //DropboxAPI.Entry response = null;
+            CharSequence filelist[] = params[0];
+            String FOLDER_NAME_ON_DROPBOX = flashcard_collectin.getFolderNameOnStorage();
+
+            try {
+                for (int i = 0; i < filelist.length; i++) {
+
+                    // file path on the dropbox
+                    path_on_dropbox = "/" + FOLDER_NAME_ON_DROPBOX + "/" + (String) filelist[i];
+
+                    // file path on external storage
+                    fq_file = new File(fq_folder, (String) filelist[i]);
+                    fq_file_temp = new File(fq_folder, (String) filelist[i] + ".2"); //save temporarily in *.2 file
+
+                    // get the file from dropbox and put it on storage//TODO: check if files are same, do not download them....(if possible)
+                    outputStream = new FileOutputStream(fq_file_temp);
+
+                    // error if file does not exist
+                    //response = mDBApi.getFile(path_on_dropbox, null, outputStream, null).getMetadata();
+
+                    if (!dropbox.exists(path_on_dropbox)) { // none-existed file //TODO: handle other type of errors here too.
+
+                        // close and delete it.
+                        if (outputStream != null)
+                            outputStream.close();
+
+                        if (!fq_file_temp.delete()) {
+                            error_obj.set_error_code(13); //"File can not be deleted"
+                            return false;
+                        }
+
+                        continue; // next file
+                    }
+
+                    InputStream dropbox_stream = dropbox.download(path_on_dropbox);
+
+                    //copy dropbox stream to file stream
+                    byte[] buffer = new byte[1024];
+                    while (true) {
+                        int bytesRead = dropbox_stream.read(buffer);
+                        if (bytesRead == -1)
+                            break;
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    dropbox_stream.close();
+
+                    if (outputStream != null)
+                        outputStream.close();
+
+                    // Now we are sure that file is downloaded but as a temporary file *.2 .
+                    // then we delete the already existing file and replace it with downloaded one
+
+                    if (fq_file.exists())
+                        if (!fq_file.delete()) {
+                            error_obj.set_error_code(13); //"File can not be deleted"
+                            return false;
+                        }
+
+                    if (!fq_file_temp.renameTo(fq_file)) {
+                        error_obj.set_error_code(18); //"File can not be renamed"
+                        return false;
+                    }
+
+                }//for all files
+            } catch (Exception e) {
+                e.printStackTrace();
+                error_obj.set_error_code(19); //"Error in Dropbox or file access during download"
+                //TODO: there are various uploading error situations. consider them later. see dropbox documents from link on top of file.
+                return false;
+            }
+
+            //return (my_dropbox.dropbox_download(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+            return true;
         }
 
         @Override
@@ -621,7 +832,7 @@ public class MainActivity extends AppCompatActivity {
 
             progressBar_download.setVisibility(ProgressBar.INVISIBLE);
             load_interface_enable_status();
-            button_connect_dropbox.setEnabled(true);
+            button_connect_cloud.setEnabled(true);
             button_download.setEnabled(true);
             button_upload.setEnabled(true);
 
@@ -646,107 +857,6 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    class UploadTaskClass extends AsyncTask<CharSequence[], Integer, Boolean> { //params, progress, result
-
-        @Override
-        protected void onPreExecute() {
-            //txt.setText("Task Starting...");
-            progressBar_upload.setVisibility(ProgressBar.VISIBLE);
-            save_interface_enable_status();
-            disable_interface();
-            button_connect_dropbox.setEnabled(false);
-            button_download.setEnabled(false);
-            button_upload.setEnabled(false);
-        }
-
-        @Override
-        protected Boolean doInBackground(CharSequence[]... params) {
-            /*
-            publishProgress(50);
-            */
-            return (my_dropbox.dropbox_upload(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            //txt.setText("Running..." + values[0]);
-            //progressBar_upload.setProgress(values[0]);
-            //TODO: add this part for upload
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-            progressBar_upload.setVisibility(ProgressBar.INVISIBLE);
-            load_interface_enable_status();
-            button_connect_dropbox.setEnabled(true);
-            button_download.setEnabled(true);
-            button_upload.setEnabled(true);
-
-            if (result) {
-                //Dialog for "uploaded Successfully".
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-                mBuilder.setIcon(android.R.drawable.checkbox_on_background);
-                mBuilder.setTitle(" ");
-                mBuilder.setMessage("Uploaded Successfully");
-                AlertDialog dialog = mBuilder.create();
-                dialog.show();
-
-            } else {
-                error_dialog(error_obj);
-            }
-        }
-
-    }//UploadTaskClass
-
-
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //On click listener for button_connect_dropbox
-    final View.OnClickListener button_connect_dropbox_OnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-
-            // initialize Dropbox session
-            my_dropbox.dropbox_initialize_session();
-
-        } //onClick
-    }; //button_connect_dropbox_OnClickListener
-
-
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //On click listener for button_download
-    final View.OnClickListener button_download_OnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-
-            //show a confirmation dialog before run.
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Download data")
-                    .setMessage("Download may overwrite your data. Continue?")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            //run a AsyncTask (a kind of thread) for downloading. Because it takes some seconds.
-                            // it includes delete of file, and re-open the flash file
-                            DownloadTaskClass my_downloader_task = new DownloadTaskClass();
-                            my_downloader_task.execute(fq_files ); // execute(Params...). pass parameter to task.
-                        }//onClick
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .show();
-
-        } //onClick
-    }; //button_download_OnClickListener
-
-
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
     //On click listener for button_upload
     final View.OnClickListener button_upload_OnClickListener = new View.OnClickListener() {
         @Override
@@ -763,7 +873,7 @@ public class MainActivity extends AppCompatActivity {
                             //run a AsyncTask (a kind of thread) for uploading. Because it takes some seconds.
                             // it includes delete of file, and re-open the flash file
                             UploadTaskClass my_uploader_task = new UploadTaskClass();
-                            my_uploader_task.execute( fq_files ); // execute(Params...). pass parameter to task.
+                            my_uploader_task.execute(fq_files); // execute(Params...). pass parameter to task.
                         }//onClick
                     })
                     .setNegativeButton(android.R.string.no, null)
@@ -772,6 +882,135 @@ public class MainActivity extends AppCompatActivity {
         } //onClick
     }; //button_upload_OnClickListener
 
+    class UploadTaskClass extends AsyncTask<CharSequence[], Integer, Boolean> { //params, progress, result
+
+        @Override
+        protected void onPreExecute() {
+            //txt.setText("Task Starting...");
+            progressBar_upload.setVisibility(ProgressBar.VISIBLE);
+            save_interface_enable_status();
+            disable_interface();
+            button_connect_cloud.setEnabled(false);
+            button_download.setEnabled(false);
+            button_upload.setEnabled(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(CharSequence[]... params) {
+            /*
+            publishProgress(50);
+            */
+            Dropbox dropbox = new Dropbox(
+                    MainActivity.getContext(),
+                    DROPBOX_CLIENT_ID,
+                    DROPBOX_CLIENT_SECRET,
+                    DROPBOX_REDIRECT_URL,
+                    "CLOUD_STATE");
+
+            dropbox.useAdvancedAuthentication();
+
+            /*
+            if (!dropbox_is_connected) {
+                error_obj.set_error_code(15); //"Before upload/download, connect to Dropbox first"
+                return false;
+            }
+            */
+
+            //First check that Ex-Storage is mounted or not.
+            String storage_state = Environment.getExternalStorageState();
+            if (!storage_state.equals("mounted")) {
+                error_obj.set_error_code(3); //"Ex-Storage not mounted!"
+                return false;
+            }
+
+            File fq_folder = null;
+            File fq_file = null;
+            String path_on_dropbox = "";
+            String FolderNameOnStorage = my_fc_col.getFolderNameOnStorage();
+
+            String storage_root_path = Environment.getExternalStorageDirectory().getPath();
+            fq_folder = new File(storage_root_path, FolderNameOnStorage);
+            //DropboxAPI.Entry response = null;
+            CharSequence filelist[] = params[0];
+
+            String FOLDER_NAME_ON_DROPBOX = flashcard_collectin.getFolderNameOnStorage();
+            if (!dropbox.exists("/" + FOLDER_NAME_ON_DROPBOX)) {
+                dropbox.createFolder("/" + FOLDER_NAME_ON_DROPBOX);
+            }
+
+            //TODO: check if there are enough space dropbox to upload
+
+            //try {
+            for (int i = 0; i < filelist.length; i++) {
+
+                // file path on the dropbox (for cloudrail api, it must start with "/")
+                path_on_dropbox = "/" + FOLDER_NAME_ON_DROPBOX + "/" + (String) filelist[i];
+
+                // file path on external storage
+                fq_file = new File(fq_folder, (String) filelist[i]);
+
+                // there is no file for uploading, skip it, go to next file.
+                if (!fq_file.exists())
+                    continue;
+
+                // read the file and put it on dropbox
+                //TODO: check if files are same, do not upload them....(if possible)
+                //TODO: it seems dropbox automatically does not upload and overwrite a file if files is exactly similar. confirm this by test some big files.
+                FileInputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(fq_file);
+                } catch (FileNotFoundException e) {
+                    error_obj.set_error_code(17); //"File can not be uploaded"
+                    e.printStackTrace();
+                }
+                //response = mDBApi.putFileOverwrite(path_on_dropbox, inputStream, fq_file.length(), null);
+
+                dropbox.upload(
+                        path_on_dropbox,
+                        inputStream,
+                        fq_file.length(),
+                        true
+                );
+
+            }//for all files
+            //TODO: there are various uploading error situations. consider them later. see dropbox documents from link on top of file.
+
+            return true;
+
+            //return (my_dropbox.dropbox_upload(params[0], my_fc_col.getFolderNameOnStorage(), error_obj));
+
+        }//doInBackground
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //txt.setText("Running..." + values[0]);
+            //progressBar_upload.setProgress(values[0]);
+            //TODO: add this part for upload
+        }//onProgressUpdate
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            progressBar_upload.setVisibility(ProgressBar.INVISIBLE);
+            load_interface_enable_status();
+            button_connect_cloud.setEnabled(true);
+            button_download.setEnabled(true);
+            button_upload.setEnabled(true);
+
+            if (result) {
+                //Dialog for "uploaded Successfully".
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                mBuilder.setIcon(android.R.drawable.checkbox_on_background);
+                mBuilder.setTitle(" ");
+                mBuilder.setMessage("Uploaded Successfully");
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
+            } else {
+                error_dialog(error_obj);
+            }
+        }//onPostExecute
+
+    }//UploadTaskClass
 
 }//public class MainActivity
 

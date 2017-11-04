@@ -11,29 +11,23 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="auth.cloudrail.com" android:scheme="https" android:path="/com.hamze.myflashqard" />
+            </intent-filter>
+
         </activity>
 
         <activity android:name=".StudyActivity">
-        </activity>
-
-        <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboard">
-            <intent-filter>
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="db-wryp2qsk27carsq" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
 
 
