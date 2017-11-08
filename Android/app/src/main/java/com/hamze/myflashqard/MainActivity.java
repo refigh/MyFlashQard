@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.cloudrail.si.CloudRail;
 import com.cloudrail.si.services.Dropbox;
-import com.dropbox.client2.DropboxAPI;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -74,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Add a different request code for every activity you are starting from here
     private static final int SECOND_ACTIVITY_RESULT_CODE = 0;
+
 
     //normal variables
     private int count = 1;
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         button_Nosave_close = (Button) findViewById(R.id.button_Nosave_close);
         button_Nosave_close.setOnClickListener(button_Nosave_close_OnClickListener);
 
-        //connect to internet forlder
+        //connect to internet folder
         button_connect_cloud = (ImageButton) findViewById(R.id.button_connect_cloud);
         button_connect_cloud.setOnClickListener(button_connect_cloud_OnClickListener);
 
@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar_reset = (ProgressBar) findViewById(R.id.progressBar_reset);
         progressBar_upload = (ProgressBar) findViewById(R.id.progressBar_upload);
         progressBar_download = (ProgressBar) findViewById(R.id.progressBar_download);
+
 
         // keep current context
         mContext = MainActivity.this;

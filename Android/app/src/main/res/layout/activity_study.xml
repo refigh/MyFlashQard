@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -23,7 +24,6 @@
                 style="@android:style/Widget.DeviceDefault.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:numStars="6"
                 android:rating="6"
                 android:stepSize="1"
@@ -73,7 +73,7 @@
         android:scrollbars="vertical"
         android:text="بعدی را بفشار"
         android:textColor="#000"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/textView_side2_title"
@@ -89,33 +89,108 @@
         android:id="@+id/textView_side2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.58"
-        android:text=""
-        android:scrollbars="vertical"
+        android:layout_weight="0.6"
         android:background="#66FFB2"
+        android:scrollbars="vertical"
+        android:text=""
         android:textColor="#000"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/textView_example_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#CBCECD"
-        android:gravity="center"
-        android:text="مثال"
-        android:textColor="#000"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textView_example"
+    <TabHost
+        android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.58"
-        android:text=""
-        android:scrollbars="vertical"
-        android:background="#DCDCDC"
-        android:textColor="#000"
-        android:textSize="18sp" />
+        android:layout_weight="0.6">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:background="@android:color/darker_gray">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:tag="tab0"
+                    android:text="مثال" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:tag="tab1"
+                    android:text="توضیحات" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:tag="tab2"
+                    android:text="مترادف" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:tag="tab3"
+                    android:text="متضاد" />
+
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textView_example"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DCDCDC"
+                    android:scrollbars="vertical"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DCDCDC"
+                    android:scrollbars="vertical"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView_synonym"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DCDCDC"
+                    android:scrollbars="vertical"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView_antonym"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DCDCDC"
+                    android:scrollbars="vertical"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </TabHost>
 
     <TableRow
         android:layout_width="match_parent"

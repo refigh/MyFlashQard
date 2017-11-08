@@ -16,8 +16,11 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -47,6 +50,12 @@ public class StudyActivity extends Activity {
     private TextView textView_side1;
     private TextView textView_side2;
     private TextView textView_example;
+    private TextView textView_comment;
+    private TextView textView_synonym;
+    private TextView textView_antonym;
+
+    //frame holder
+    private TabHost tabHost;
 
     //check box
     private CheckBox checkBox_correct;
@@ -110,6 +119,15 @@ public class StudyActivity extends Activity {
         textView_example = (TextView) findViewById(R.id.textView_example);
         textView_example.setMovementMethod(new ScrollingMovementMethod());
 
+        textView_comment = (TextView) findViewById(R.id.textView_comment);
+        textView_comment.setMovementMethod(new ScrollingMovementMethod());
+
+        textView_synonym = (TextView) findViewById(R.id.textView_synonym);
+        textView_synonym.setMovementMethod(new ScrollingMovementMethod());
+
+        textView_antonym = (TextView) findViewById(R.id.textView_antonym);
+        textView_antonym.setMovementMethod(new ScrollingMovementMethod());
+
         //check box
         checkBox_correct = (CheckBox) findViewById(R.id.checkBox_correct);
         checkBox_correct.setChecked(false);
@@ -124,8 +142,43 @@ public class StudyActivity extends Activity {
         Lastcard = null;
         Lastcard_stage_num = -1;
 
-        //access to the uniqe flashcar collection.
+        //access to the unique flashcard collection.
         my_fc_col = MainActivity.getFlashcard();
+
+        // frame holders
+        tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        tabHost.setup();
+
+        TabWidget tabs = tabHost.getTabWidget();
+        FrameLayout tabContent = tabHost.getTabContentView();
+        // Get the original tab textviews and remove them from the viewgroup.
+        TextView[] originalTextViews = new TextView[tabs.getTabCount()];
+        for (int index = 0; index < tabs.getTabCount(); index++)
+            originalTextViews[index] = (TextView) tabs.getChildTabViewAt(index);
+        tabs.removeAllViews();
+        // Ensure that all tab content children are not visible at startup.
+        for (int index = 0; index < tabContent.getChildCount(); index++)
+            tabContent.getChildAt(index).setVisibility(View.GONE);
+        // Create the tabspec based on the textview children in the xml file.
+        // Or create simple tabspec instances in any other way...
+        for (int index = 0; index < originalTextViews.length; index++) {
+            final TextView curtab_WTV = originalTextViews[index];
+            final View curtab_CV = tabContent.getChildAt(index);
+            //set tag, from widget list
+            TabHost.TabSpec curtab_Spec = tabHost.newTabSpec((String) curtab_WTV.getTag());
+            //set content from content list
+            curtab_Spec.setContent(new TabHost.TabContentFactory() {
+                @Override
+                public View createTabContent(String tag) {
+                    return curtab_CV;
+                }
+            });
+            if (curtab_WTV.getBackground() == null)
+                curtab_Spec.setIndicator(curtab_WTV.getText());
+            else
+                curtab_Spec.setIndicator(curtab_WTV.getText(), curtab_WTV.getBackground());
+            tabHost.addTab(curtab_Spec);
+        } // for
 
 
         //Today
@@ -171,10 +224,11 @@ public class StudyActivity extends Activity {
             //toggle the visibility and second side of card, examples, etc.
             if (textView_side2.getVisibility() == TextView.VISIBLE) {
                 textView_side2.setVisibility(TextView.INVISIBLE);
-                textView_example.setVisibility(TextView.INVISIBLE);
+                tabHost.getTabContentView().setVisibility(FrameLayout.INVISIBLE);
             } else {
                 textView_side2.setVisibility(TextView.VISIBLE);
-                textView_example.setVisibility(TextView.VISIBLE);
+                tabHost.getTabContentView().setVisibility(FrameLayout.VISIBLE);
+                tabHost.setCurrentTab(0);
             }
             return;
 
@@ -194,6 +248,9 @@ public class StudyActivity extends Activity {
             String string_side1 = "";
             String string_side2 = "";
             String string_examp = "";
+            String string_comment = "";
+            String string_synonym = "";
+            String string_antonym = "";
             int next_stage = -1;
             ratingBar_NumCorrect.setRating(0);
 
@@ -283,11 +340,17 @@ public class StudyActivity extends Activity {
                 string_side1 = "فعلا کارتی موجود نیست.";
                 string_side2 = "";
                 string_examp = "";
+                string_comment = "";
+                string_synonym = "";
+                string_antonym = "";
                 ratingBar_NumCorrect.setRating(0);
             } else {
                 string_side1 = Lastcard.Text_of_First_Language;
                 string_side2 = Lastcard.Text_of_Second_Language;
                 string_examp = Lastcard.Text_of_examples;
+                string_comment = Lastcard.Text_of_comments;
+                string_synonym = Lastcard.Text_of_synonyms;
+                string_antonym = Lastcard.Text_of_antonyms;
                 // set how many times the card is answered correctly
                 ratingBar_NumCorrect.setRating(Lastcard_stage_num - 1);
             }
@@ -313,12 +376,20 @@ public class StudyActivity extends Activity {
             textView_example.setText(string_examp);
             textView_example.scrollTo(0, 0);
 
+            textView_comment.setText(string_comment);
+            textView_comment.scrollTo(0, 0);
+
+            textView_synonym.setText(string_synonym);
+            textView_synonym.scrollTo(0, 0);
+
+            textView_antonym.setText(string_antonym);
+            textView_antonym.scrollTo(0, 0);
+
             checkBox_correct.setChecked(false);
 
             //by default, 2nd side of card should be invisible
             textView_side2.setVisibility(TextView.INVISIBLE);
-            textView_example.setVisibility(TextView.INVISIBLE);
-
+            tabHost.getTabContentView().setVisibility(FrameLayout.INVISIBLE);
 
             return;
 
