@@ -115,27 +115,29 @@
                 android:layout_weight="5"
                 android:background="@android:color/darker_gray">
 
+                <!-- below texviews will be destoryed and rebuild, then
+                     do not assign id for them -->
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_height="match_parent"
                     android:tag="tab0"
                     android:text="مثال" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_height="match_parent"
                     android:tag="tab1"
                     android:text="توضیحات" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_height="match_parent"
                     android:tag="tab2"
                     android:text="مترادف" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_height="match_parent"
                     android:tag="tab3"
                     android:text="متضاد" />
 
@@ -147,6 +149,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
+                <!--tab1-->
                 <TextView
                     android:id="@+id/textView_example"
                     android:layout_width="match_parent"
@@ -157,6 +160,7 @@
                     android:textColor="#000"
                     android:textSize="16sp" />
 
+                <!--tab2-->
                 <TextView
                     android:id="@+id/textView_comment"
                     android:layout_width="match_parent"
@@ -167,6 +171,7 @@
                     android:textColor="#000"
                     android:textSize="16sp" />
 
+                <!--tab3-->
                 <TextView
                     android:id="@+id/textView_synonym"
                     android:layout_width="match_parent"
@@ -177,6 +182,7 @@
                     android:textColor="#000"
                     android:textSize="16sp" />
 
+                <!--tab4-->
                 <TextView
                     android:id="@+id/textView_antonym"
                     android:layout_width="match_parent"
