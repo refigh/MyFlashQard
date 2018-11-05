@@ -409,27 +409,19 @@ public class StudyActivity extends Activity {
 
             //make the title of non-empty texts, as underlined.
             TabWidget tab_widgets = tabHost.getTabWidget();
-            for (int index = 0; index < tab_widgets.getChildCount(); index++) {
-                TextView tv =  (TextView)tab_widgets.getChildAt(index).findViewById(android.R.id.title);
-                tv.setPaintFlags(tv.getPaintFlags() & ~Paint.UNDERLINE_TEXT_FLAG); // remove underline
-            }
-            if  (!string_examp.isEmpty()) {
-                TextView tv =  (TextView)tab_widgets.getChildAt(0).findViewById(android.R.id.title);
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // add underline
-            }
-            if (!string_comment.isEmpty()){
-                TextView tv =  (TextView)tab_widgets.getChildAt(1).findViewById(android.R.id.title);
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // add underline
-            }
-            if (!string_synonym.isEmpty()){
-                TextView tv =  (TextView)tab_widgets.getChildAt(2).findViewById(android.R.id.title);
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // add underline
-            }
-            if (!string_antonym.isEmpty()){
-                TextView tv =  (TextView)tab_widgets.getChildAt(3).findViewById(android.R.id.title);
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // add underline
-            }
+            FrameLayout tab_contents = tabHost.getTabContentView();
 
+            for (int index = 0; index < tab_widgets.getChildCount(); index++) {
+                View v_title = tab_widgets.getChildAt(index).findViewById(android.R.id.title);
+                View v_content = tab_contents.getChildAt(index);
+                TextView tv_title = (TextView) v_title;
+                TextView tv_content = (TextView) v_content;
+
+                if (tv_content.getText().toString().isEmpty())
+                    tv_title.setPaintFlags(tv_title.getPaintFlags() & ~Paint.UNDERLINE_TEXT_FLAG); // remove underline
+                else
+                    tv_title.setPaintFlags(tv_title.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // add underline
+            }
 
 
             return;
