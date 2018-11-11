@@ -102,9 +102,9 @@ public class flashcard_collectin {
         //Generate the MIN_REVIEW_TIME array
         MIN_REVIEW_TIME = new long[MAX_STAGE_NUM];
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            //values for state 0,1 and Final are not important (X:dont care)
-            // X, X, 1, 3, 9,  ....
-            long number_of_days = (long) Math.pow(3, (i - 2));
+            //values for state 0 and Final are not important (X:don't care)
+            // X, 1, 2, 4, 8, 16, 32, ...
+            long number_of_days = (long) Math.pow(2, (i - 1)); //TODO: make formulation optional, linear
             MIN_REVIEW_TIME[i] = number_of_days * 24 * 60 * 60 * 1000; //convert from day to millisecond;
             MIN_REVIEW_TIME[i] -= 1000000; //reduce a small number for avoid marginal calculation problem.
         }

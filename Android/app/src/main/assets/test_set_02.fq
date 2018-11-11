@@ -111,6 +111,25 @@
     <antonyms>e_ant1</antonyms>
     <statistics>
      <dateCreated>15.6.2017</dateCreated>
+     <answer date="15.6.2017" >false</answer>
+    </statistics>
+   </card>
+   <card type="vocabulary" >
+    <translationdocument language="First Language" >
+     <html>e2_word</html>
+    </translationdocument>
+    <translationdocument language="Second Language" >
+     <html>e2_translate</html>
+    </translationdocument>
+    <examples>e2_example</examples>
+    <wordtype>Noun, Adjective, Other</wordtype>
+    <userdefinedwordtype>e2_word type_other</userdefinedwordtype>
+    <comments>e2_comment1</comments>
+    <synonyms>e2_syn1, e2_syn2</synonyms>
+    <antonyms>e2_ant1</antonyms>
+    <statistics>
+     <dateCreated>15.6.2017</dateCreated>
+     <answer date="15.6.2017" >true</answer>
     </statistics>
    </card>
   </stage>
