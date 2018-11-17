@@ -41,8 +41,7 @@ public class StudyActivity extends Activity {
     private flashcard_collectin my_fc_col_temp_ptr;
 
     //info of last shown card
-    private vocabulary_card cur_card;
-    private int cur_stage_id; // TODO: should be asked from cur_card.
+    private vocabulary_card cur_card; // TODO: read from flashcard class, not here.
 
 
     //----------------------------------------------------------------
@@ -98,7 +97,7 @@ public class StudyActivity extends Activity {
         my_fc_col_temp_ptr = MainActivity.getFlashcard();
 
         cur_card = null;
-        cur_stage_id = -1;
+        //cur_stage_id = -1;
 
 
         //----------------------------------------------------------------
@@ -215,8 +214,6 @@ public class StudyActivity extends Activity {
         public void onClick(final View v) {
             //study session is closed, but the current state of my_fc_col_temp_ptr is not touched.
 
-            my_fc_col_temp_ptr.update_card_count();
-
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_CANCELED, returnIntent);
             finish();   //StudyActivity.this.finish();
@@ -262,6 +259,8 @@ public class StudyActivity extends Activity {
             //------------------------------------------------------------
             // TODO: have this function out of GUI cur_card_move_outof_GUI(cur_card, checkBox_correct.isChecked(), today_formatted );
 
+            int cur_stage_id = -1;
+
             // Before showing next card, move the currently shown card (cur_card) to proper stage.
             // in 2 situations there is no current card, before starting the review, and after finishing
             // all cards.
@@ -272,6 +271,8 @@ public class StudyActivity extends Activity {
                 cur_card.The_statistics.answer_date.add(today_formatted);
                 cur_card.The_statistics.answer_value.clear();
                 cur_card.The_statistics.answer_value.add(checkBox_correct.isChecked() ? "true" : "false");
+
+                cur_stage_id = cur_card.get_stage_id_of_card(my_fc_col_temp_ptr);
 
                 //TODO: add error codes
                 assert( (1 <= cur_stage_id) && (cur_stage_id <= (my_fc_col_temp_ptr.getMaxStageNum() - 1))  );
@@ -295,17 +296,15 @@ public class StudyActivity extends Activity {
 
                 //move cur_card to dest stage
                 //even if it is from/to same stage, it is removed and added to put card to the end
-                my_fc_col_temp_ptr.stage_list[cur_stage_id].cards.remove(cur_card); // must return true...
-                my_fc_col_temp_ptr.stage_list[dest_stage_id].cards.addLast(cur_card);
-                my_fc_col_temp_ptr.stage_list[dest_stage_id].stage_type = 1; //activate the stage, if it is not.
-
-                my_fc_col_temp_ptr.update_card_count(); //TODO: handle this automatically, ... or in a better way
+                my_fc_col_temp_ptr.stage_list[cur_stage_id].get_cards().remove(cur_card); // must return true...
+                my_fc_col_temp_ptr.stage_list[dest_stage_id].get_cards().addLast(cur_card);
+                my_fc_col_temp_ptr.stage_list[dest_stage_id].set_Stage_type(stage.ACTIVE_STAGE); //activate the stage, if it is not.
 
             } //manage previously shown card (cur_card)
 
 
             /* Now, find next card:
-            After below code cur_card points to next card, or null, cur_stage_id points to it's stage.
+            After below code cur_card points to next card, or null
 
             card selection policy: FC-FS, older cards have higher priority. Because number of cards is
             large. Then, for reviewing a limited number of cards per day, it is good to have a small
@@ -327,7 +326,7 @@ public class StudyActivity extends Activity {
 
                 stage cur_stage = my_fc_col_temp_ptr.stage_list[cur_stage_id];
                 //skip inactive or empty stages
-                if ((cur_stage.stage_type == -1) || cur_stage.cards.isEmpty()) {
+                if ((cur_stage.get_Stage_type() == stage.INACTIVE_STAGE) || cur_stage.get_cards().isEmpty()) {
                     cur_stage_id--;
                     continue;
                 }
@@ -335,8 +334,8 @@ public class StudyActivity extends Activity {
                 // head-card is fresh (no date), it is selected.
                 // when head has no date, it is expected to not happen other than start stage (a very fresh card)
                 // but it may happen in other states due to manual card movement (in PC tool)
-                else if (cur_stage.cards.getFirst().The_statistics.answer_date.isEmpty() ) {
-                    cur_card = cur_stage.cards.getFirst();
+                else if (cur_stage.get_cards().getFirst().The_statistics.answer_date.isEmpty() ) {
+                    cur_card = cur_stage.get_cards().getFirst();
                     next_card_found = true;
                     break;
                 }
@@ -347,7 +346,7 @@ public class StudyActivity extends Activity {
                     // note that, head-card of each stage is the oldest.
                     Date headcard_date = null;
                     try {
-                        headcard_date = df.parse(cur_stage.cards.getFirst().The_statistics.answer_date.getFirst());
+                        headcard_date = df.parse(cur_stage.get_cards().getFirst().The_statistics.answer_date.getFirst());
                     } catch (ParseException e) {
                         //TODO: assign new type of error due to time format error
                         e.printStackTrace();
@@ -366,11 +365,11 @@ public class StudyActivity extends Activity {
                         Date card_date_temp = null;
                         do{
                             count++;
-                            if (count == cur_stage.card_count)
+                            if (count == cur_stage.get_card_count())
                                 break;
                             else
                                 try {
-                                    card_date_temp = df.parse(cur_stage.cards.get(count).The_statistics.answer_date.getFirst());
+                                    card_date_temp = df.parse(cur_stage.get_cards().get(count).The_statistics.answer_date.getFirst());
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                     //TODO: add error code
@@ -379,7 +378,7 @@ public class StudyActivity extends Activity {
 
                         rand = new Random();
                         int index = rand.nextInt(count); // 0 to count-1
-                        cur_card = cur_stage.cards.get(index);
+                        cur_card = cur_stage.get_cards().get(index);
                         next_card_found = true;
                         break;
                     } else {
@@ -402,7 +401,6 @@ public class StudyActivity extends Activity {
 
             // give value to strings and convert them to HTML format
             if (!next_card_found) {
-                cur_stage_id = -1; // no needed indeed, because cur_card is null. just for debugging.
                 string_side1 = "فعلا کارتی موجود نیست.";
                 string_side2 = "";
                 string_examp = "";
@@ -417,7 +415,7 @@ public class StudyActivity extends Activity {
                 string_comment = cur_card.Text_of_comments;
                 string_synonym = cur_card.Text_of_synonyms;
                 string_antonym = cur_card.Text_of_antonyms;
-                ratingBar_NumCorrect.setRating(cur_stage_id - 1); // show card stage-number
+                ratingBar_NumCorrect.setRating(cur_card.get_stage_id_of_card(my_fc_col_temp_ptr) - 1);
             }
 
             //convert above string HTML format

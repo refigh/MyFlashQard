@@ -28,13 +28,17 @@ public class flashcard_collectin {
 
     //TODO: what if the file has more stage than MAX_STAGE_NUM number? program craches!
     //0 : inactive cards(stack)
-    //1 : new and un-reviewed stage cards
+    //1 : new stage cards (mostly un-reviewed cards)
     //2...MAX_STAGE_NUM-2 (MAX_STAGE_NUM-3 number): cards under review
     //MAX_STAGE_NUM-1 : final successful stage
-    private static final int MAX_STAGE_NUM = 8; //min = 4, Max = 10 (due to Ratingbar presentation issue)
-    private long[] MIN_REVIEW_TIME; //defined for each stage. unit: millisecond
+    //min = 4, Max = 10 (due to Ratingbar presentation issue)
+    private static final int MAX_STAGE_NUM = 8;
 
-    //XML tags and attributes (shorter tags can be replaced for file compression.
+    //defined for each stage. Card stays in each stage at least this time before next review.
+    // unit: millisecond
+    private long[] MIN_REVIEW_TIME;
+
+    //XML tags and attributes
     //TODO: simplify XML tag names to reduce file size.
     private static final String TG_TRD = "translationdocument";
     private static final String TG_USR_WT = "userdefinedwordtype";
@@ -71,9 +75,6 @@ public class flashcard_collectin {
     //cards date. Each stage includes a list of cards
     public stage[] stage_list;
 
-    //total card num (stack + active stages). we do not expect any card to be in inactive stages.
-    public int total_card_num;
-    public int user_progress_value; //MAX =  number_of_active_cards * (MAX_STAGE_NUM-2)
 
 
     //----------------------------------------------------------------------------------------
@@ -88,8 +89,6 @@ public class flashcard_collectin {
         writerversion = "";
         flashqardversion = "";
         box_name = "";
-        total_card_num = 0;
-        user_progress_value = 0;
         IsOpen = false;
         file_path = "";
 
@@ -202,10 +201,10 @@ public class flashcard_collectin {
 
                         case TG_TRD: // translation document
                             if (first_lang) {
-                                stage_list[stage_counter].cards.peekLast().First_Language = xpp.getAttributeValue(0);
+                                stage_list[stage_counter].get_cards().peekLast().First_Language = xpp.getAttributeValue(0);
                                 first_lang = false;
                             } else {
-                                stage_list[stage_counter].cards.peekLast().Second_Language = xpp.getAttributeValue(0);
+                                stage_list[stage_counter].get_cards().peekLast().Second_Language = xpp.getAttributeValue(0);
                                 first_lang = true;
                             }
 
@@ -214,7 +213,7 @@ public class flashcard_collectin {
                         case TG_STACK: //stack
                             if (stage_counter == -1) {
                                 stage_counter = 0;
-                                stage_list[0].stage_type = 0; //0: stack type
+                                stage_list[0].set_Stage_type(stage.STACK_STAGE);
                             } else {
                                 //error: just one stack should exist
                                 error_obj.set_error_code(6);
@@ -225,7 +224,7 @@ public class flashcard_collectin {
 
                         case TG_STAGE: //stage
                             stage_counter++;
-                            stage_list[stage_counter].stage_type = 1; //1: active stage type
+                            stage_list[stage_counter].set_Stage_type(stage.ACTIVE_STAGE);
                             break;
 
                         case TG_CARD: //card
@@ -234,8 +233,8 @@ public class flashcard_collectin {
                                 error_obj.set_error_code(7, card_cnt);//invalid card is card number card_cnt
                                 return false;
                             }
-                            stage_list[stage_counter].cards.add(new vocabulary_card());
-                            stage_list[stage_counter].cards.peekLast().card_group = stage_counter;
+                            stage_list[stage_counter].get_cards().add(new vocabulary_card());
+                            stage_list[stage_counter].get_cards().peekLast().card_group = stage_counter;
                             break;
 
                         default:
@@ -273,44 +272,44 @@ public class flashcard_collectin {
                             // refer to Write_fq_to_file(), HTML part, to see those replacement.
                             //TODO: later check this more if necessary...
                             if (!first_lang) //!first_lang, because first_lang is already toggled in start tag.
-                                stage_list[stage_counter].cards.peekLast().Text_of_First_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
+                                stage_list[stage_counter].get_cards().peekLast().Text_of_First_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
                             else
-                                stage_list[stage_counter].cards.peekLast().Text_of_Second_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
+                                stage_list[stage_counter].get_cards().peekLast().Text_of_Second_Language = xpp.getText();//.replaceAll("<", "&lt;").replaceAll("&gt;", "&amp;gt;").replaceAll("&nbsp;", "&amp;nbsp;"); //.replaceAll("&amp;", "&amp;amp;");
 
                             break;
 
 
                         case TG_EXM: //example
-                            stage_list[stage_counter].cards.peekLast().Text_of_examples = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().Text_of_examples = xpp.getText();
                             break;
 
                         case TG_WDTP: //word type
-                            stage_list[stage_counter].cards.peekLast().Text_of_wordtype = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().Text_of_wordtype = xpp.getText();
                             break;
 
                         case TG_USR_WT: //user defined word type
-                            stage_list[stage_counter].cards.peekLast().Text_of_userdefinedwordtype = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().Text_of_userdefinedwordtype = xpp.getText();
                             break;
 
                         case TG_CMNT: //comment
-                            stage_list[stage_counter].cards.peekLast().Text_of_comments = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().Text_of_comments = xpp.getText();
                             break;
 
                         case TG_SYN: //synonym
-                            stage_list[stage_counter].cards.peekLast().Text_of_synonyms = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().Text_of_synonyms = xpp.getText();
                             break;
 
                         case TG_ANT: //antonym
-                            stage_list[stage_counter].cards.peekLast().Text_of_antonyms = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().Text_of_antonyms = xpp.getText();
                             break;
 
                         case TG_CR_DATE: //date created
-                            stage_list[stage_counter].cards.peekLast().The_statistics.dateCreated = xpp.getText();
+                            stage_list[stage_counter].get_cards().peekLast().The_statistics.dateCreated = xpp.getText();
                             break;
 
                         case TG_ANS: //answer
-                            stage_list[stage_counter].cards.peekLast().The_statistics.answer_value.add(xpp.getText());
-                            stage_list[stage_counter].cards.peekLast().The_statistics.answer_date.add(last_att_val);
+                            stage_list[stage_counter].get_cards().peekLast().The_statistics.answer_value.add(xpp.getText());
+                            stage_list[stage_counter].get_cards().peekLast().The_statistics.answer_date.add(last_att_val);
                             break;
 
                         default:
@@ -322,7 +321,6 @@ public class flashcard_collectin {
                 eventType = xpp.next(); //read next XML token from XML file.
 
             }//while
-            update_card_count();
 
             //close the files
             in_strm.close();
@@ -396,14 +394,14 @@ public class flashcard_collectin {
 
 
             int stg_cnt = 0;
-            if (stage_list[0].stage_type == -1) { //even if flashcard collection is empty, write empty stack
+            if (stage_list[0].get_Stage_type() == stage.INACTIVE_STAGE) { //even if flashcard collection is empty, write empty stack
                 writer.write("  <" + TG_STACK + ">\n");
                 writer.write("  </" + TG_STACK + ">\n");
             } else
 
                 while (stg_cnt < MAX_STAGE_NUM) {
 
-                    if (stage_list[stg_cnt].stage_type == -1) //from now on, all are inactive.
+                    if (stage_list[stg_cnt].get_Stage_type() == stage.INACTIVE_STAGE) //from now on, all are inactive.
                         break;
 
                     if (stg_cnt == 0)
@@ -411,10 +409,10 @@ public class flashcard_collectin {
                     else
                         writer.write("  <" + TG_STAGE + ">\n");
 
-                    while (stage_list[stg_cnt].cards.size() > 0) {
+                    while (stage_list[stg_cnt].get_card_count() > 0) {
 
                         //pop the first card from list and write it to the file
-                        vocabulary_card curr_card = stage_list[stg_cnt].cards.pollFirst();
+                        vocabulary_card curr_card = stage_list[stg_cnt].get_cards().pollFirst();
 
                         writer.write("   <" + TG_CARD + " type=\"" + ATTR_VOC + "\" >\n");
 
@@ -490,15 +488,15 @@ public class flashcard_collectin {
             return; //wrong code, return without suffle.
 
 
-        while ((stage_list[stg_cnt].stage_type != -1) && (stg_cnt < MAX_STAGE_NUM)) {
-            int size = stage_list[stg_cnt].cards.size();
+        while ((stage_list[stg_cnt].get_Stage_type() != stage.INACTIVE_STAGE) && (stg_cnt < MAX_STAGE_NUM)) {
+            int size = stage_list[stg_cnt].get_card_count();
             for (int i = 0; i < size; i++) {
 
                 Random rand = new Random();
                 int ind = rand.nextInt(size); // 0 to size -1
 
-                vocabulary_card temp = stage_list[stg_cnt].cards.remove(ind);
-                stage_list[stg_cnt].cards.addFirst(temp);
+                vocabulary_card temp = stage_list[stg_cnt].get_cards().remove(ind);
+                stage_list[stg_cnt].get_cards().addFirst(temp);
             }
             stg_cnt++;
         }
@@ -530,15 +528,12 @@ public class flashcard_collectin {
         writerversion = "";
         flashqardversion = "";
         box_name = "";
-        total_card_num = 0;
-        user_progress_value = 0;
         IsOpen = false;
         file_path = "";
 
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            stage_list[i].stage_type = -1; //inactive
-            stage_list[i].cards.clear(); // clear the link list in each stage
-            stage_list[i].card_count = 0;
+            stage_list[i].set_Stage_type(stage.INACTIVE_STAGE);
+            stage_list[i].get_cards().clear(); // clear the link list in each stage
         }
 
         return;
@@ -562,8 +557,8 @@ public class flashcard_collectin {
 
         //clear current open data
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            stage_list[i].stage_type = -1; //inactive
-            stage_list[i].cards.clear(); // clear the link list in each stage
+            stage_list[i].set_Stage_type(stage.INACTIVE_STAGE);
+            stage_list[i].get_cards().clear(); // clear the link list in each stage
         }
 
 
@@ -600,44 +595,21 @@ public class flashcard_collectin {
     }//reset
 
 
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // Count number of cards in each stack/stage and update related variables.
-    public Boolean update_card_count() {
-
-        /*
-        //flash card should be opened first
-        if (!IsOpen) {
-            error_obj.set_error_code(1); //"No flashcard open"
-            return false;
-        }*/
-
-        // initialize to zero
-        total_card_num = 0;
-        user_progress_value = 0;
-        for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            stage_list[i].card_count = 0;
-        }
-
+    // total card num (stack + active stages). we do not expect any card to be in inactive stages.
+    public int get_total_card_num(){
+        int temp_count = 0;
         //count cards (stack+active stage.). we do not expect any card to be in inactive stages.
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            if (stage_list[i].stage_type == -1)
+            if (stage_list[i].get_Stage_type() == stage.INACTIVE_STAGE)
                 break;
-            stage_list[i].card_count = stage_list[i].cards.size();
-            total_card_num += stage_list[i].card_count;
+            temp_count += stage_list[i].get_card_count();
         }
-
-        //user progress value:
-        for (int i = 2; i < MAX_STAGE_NUM; i++) {
-            if (stage_list[i].stage_type == -1)
-                break;
-            user_progress_value += (stage_list[i].card_count)*(i-1);
-        }
-        user_progress_value = (int) Math.floor((user_progress_value * 100.0) / ((total_card_num - stage_list[0].card_count ) * (MAX_STAGE_NUM-2) ));
-        return true;
+        return temp_count;
     }
-
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -654,5 +626,21 @@ public class flashcard_collectin {
     public static String getFolderNameOnStorage() {
         return FOLDER_NAME_ON_STORAGE;
     }
+
+    public int getUser_progress_value() {
+        //MAX =  number_of_active_cards * (MAX_STAGE_NUM-2)
+
+        int temp = 0;
+
+        for (int i = 2; i < MAX_STAGE_NUM; i++) {
+            if (stage_list[i].get_Stage_type() == stage.INACTIVE_STAGE)
+                break;
+            temp += (stage_list[i].get_card_count())*(i-1);
+        }
+        temp = (int) Math.floor((temp * 100.0) / ((get_total_card_num() - stage_list[0].get_card_count() ) * (MAX_STAGE_NUM-2) ));
+
+        return temp;
+    }
+
 
 }

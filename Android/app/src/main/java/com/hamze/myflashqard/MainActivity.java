@@ -411,8 +411,8 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     public void update_text_boxes() {
-        editText_wordcnt.setText(String.valueOf(my_fc_col.total_card_num - my_fc_col.stage_list[0].card_count)); //show only active card count
-        editText_progress.setText(String.valueOf(my_fc_col.user_progress_value) + " %");
+        editText_wordcnt.setText(String.valueOf(my_fc_col.get_total_card_num() - my_fc_col.stage_list[0].get_card_count())); //show only active card count
+        editText_progress.setText(String.valueOf(my_fc_col.getUser_progress_value()) + " %");
         editText_flashcard_name.setText(my_fc_col.box_name);
         return;
     }
