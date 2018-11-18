@@ -76,6 +76,7 @@ public class StudyActivity extends Activity {
         //----------------------------------------------------------------
         //in java non-primitive objects does not clone by assignment, they point to the same object.
         my_fc_col_temp_ptr = MainActivity.getFlashcard();
+        my_fc_col_temp_ptr.No_Active_card();
 
 
         //----------------------------------------------------------------
@@ -183,6 +184,8 @@ public class StudyActivity extends Activity {
         @Override
         public void onClick(final View v) {
             //study session is closed, but the current state of my_fc_col_temp_ptr is not touched.
+
+            my_fc_col_temp_ptr.No_Active_card();
 
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_CANCELED, returnIntent);

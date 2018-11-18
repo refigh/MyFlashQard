@@ -833,4 +833,11 @@ public class flashcard_collection {
         return active_card;
     }
 
+    //clear active card
+    public void No_Active_card() {
+        active_card = null;
+    }
+
+
+
 }
