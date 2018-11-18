@@ -21,11 +21,6 @@ import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
 
 
 /**
@@ -37,11 +32,8 @@ public class StudyActivity extends Activity {
     //----------------------------------------------------------------
     //----------------------------- Data objects
     //----------------------------------------------------------------
-    //temp_access to the unique flashcard collection.
-    private flashcard_collectin my_fc_col_temp_ptr;
-
-    //info of last shown card
-    private vocabulary_card cur_card; // TODO: read from flashcard class, not here.
+    //temp_access to the flashcard collection. A single object of the class exist in application.
+    private flashcard_collection my_fc_col_temp_ptr;
 
 
     //----------------------------------------------------------------
@@ -70,21 +62,10 @@ public class StudyActivity extends Activity {
     //rating bar
     private RatingBar ratingBar_NumCorrect;
 
-    //date format
-    SimpleDateFormat df = new SimpleDateFormat("d.M.yyyy");
-
-    //Today
-    private Calendar cal;
-    private Date today;
-    private String today_formatted;
-
-    //random generator
-    Random rand;
-
-
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
+    // me: always run when this GUI starts.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,9 +76,6 @@ public class StudyActivity extends Activity {
         //----------------------------------------------------------------
         //in java non-primitive objects does not clone by assignment, they point to the same object.
         my_fc_col_temp_ptr = MainActivity.getFlashcard();
-
-        cur_card = null;
-        //cur_stage_id = -1;
 
 
         //----------------------------------------------------------------
@@ -193,15 +171,6 @@ public class StudyActivity extends Activity {
             tabHost.addTab(curtab_Spec);
         } // for
 
-        //Today
-        cal = Calendar.getInstance();
-        cal.clear(cal.MILLISECOND); //our precision is day.
-        cal.clear(cal.SECOND);
-        cal.clear(cal.MINUTE);
-        cal.clear(cal.HOUR);
-        today = cal.getTime();
-        today_formatted = df.format(today);
-
 
     }//onClick
 
@@ -209,6 +178,7 @@ public class StudyActivity extends Activity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //On click listener for button_close_study
+    // leave this open GUI
     final View.OnClickListener button_close_study_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -250,143 +220,16 @@ public class StudyActivity extends Activity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //On click listener for button_next
+    // close current active card and go to next card
     final View.OnClickListener button_next_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
 
-            //------------------------------------------------------------
-            //------------ Manage current(active) and next card
-            //------------------------------------------------------------
-            // TODO: have this function out of GUI cur_card_move_outof_GUI(cur_card, checkBox_correct.isChecked(), today_formatted );
+            // Before go to next card, manage current active card.
+            my_fc_col_temp_ptr.move_active_card(checkBox_correct.isChecked());
 
-            int cur_stage_id = -1;
-
-            // Before showing next card, move the currently shown card (cur_card) to proper stage.
-            // in 2 situations there is no current card, before starting the review, and after finishing
-            // all cards.
-            if (cur_card != null) {
-
-                //update date and answer (for now, only info of last card review is stored)
-                cur_card.The_statistics.answer_date.clear();
-                cur_card.The_statistics.answer_date.add(today_formatted);
-                cur_card.The_statistics.answer_value.clear();
-                cur_card.The_statistics.answer_value.add(checkBox_correct.isChecked() ? "true" : "false");
-
-                cur_stage_id = cur_card.get_stage_id_of_card(my_fc_col_temp_ptr);
-
-                //TODO: add error codes
-                assert( (1 <= cur_stage_id) && (cur_stage_id <= (my_fc_col_temp_ptr.getMaxStageNum() - 1))  );
-
-                //find destination stage (for correct or wrong answer)
-                int dest_stage_id = -1;
-                if (checkBox_correct.isChecked()) {
-                    if (cur_stage_id < (my_fc_col_temp_ptr.getMaxStageNum() - 1))
-                        dest_stage_id = cur_stage_id + 1; // go next
-                    else
-                        dest_stage_id = cur_stage_id; //stay in final stage (? just in case, we should never review last stage)
-
-                } else {
-                    //TODO: moving the wrong card into start-state or prev. state should be an option.
-                    //dest_stage_id = 1;
-                    if (cur_stage_id > 1) //TODO: starting state, should be a constant, not 1
-                        dest_stage_id = cur_stage_id - 1;
-                    else
-                        dest_stage_id = 1;
-                }
-
-                //move cur_card to dest stage
-                //even if it is from/to same stage, it is removed and added to put card to the end
-                my_fc_col_temp_ptr.stage_list[cur_stage_id].get_cards().remove(cur_card); // must return true...
-                my_fc_col_temp_ptr.stage_list[dest_stage_id].get_cards().addLast(cur_card);
-                my_fc_col_temp_ptr.stage_list[dest_stage_id].set_Stage_type(stage.ACTIVE_STAGE); //activate the stage, if it is not.
-
-            } //manage previously shown card (cur_card)
-
-
-            /* Now, find next card:
-            After below code cur_card points to next card, or null
-
-            card selection policy: FC-FS, older cards have higher priority. Because number of cards is
-            large. Then, for reviewing a limited number of cards per day, it is good to have a small
-            moving active set, than a huge slow-moving set.
-
-            Then, we start to search from top stage backward. In each stage, we start from head (older) card.
-            No card will be selected from final stage (finish stage). Then search is started from stage
-            before to last.
-            */
-
-            cur_card = null;
-            cur_stage_id = my_fc_col_temp_ptr.getMaxStageNum() - 2;
-            boolean next_card_found = false;
-            while (true) {
-
-                //finally, card was not found
-                if (cur_stage_id < 1)
-                    break;
-
-                stage cur_stage = my_fc_col_temp_ptr.stage_list[cur_stage_id];
-                //skip inactive or empty stages
-                if ((cur_stage.get_Stage_type() == stage.INACTIVE_STAGE) || cur_stage.get_cards().isEmpty()) {
-                    cur_stage_id--;
-                    continue;
-                }
-
-                // head-card is fresh (no date), it is selected.
-                // when head has no date, it is expected to not happen other than start stage (a very fresh card)
-                // but it may happen in other states due to manual card movement (in PC tool)
-                else if (cur_stage.get_cards().getFirst().The_statistics.answer_date.isEmpty() ) {
-                    cur_card = cur_stage.get_cards().getFirst();
-                    next_card_found = true;
-                    break;
-                }
-
-                // head card has date (already reviewed)
-                else {
-                    // find time difference between now and head-card
-                    // note that, head-card of each stage is the oldest.
-                    Date headcard_date = null;
-                    try {
-                        headcard_date = df.parse(cur_stage.get_cards().getFirst().The_statistics.answer_date.getFirst());
-                    } catch (ParseException e) {
-                        //TODO: assign new type of error due to time format error
-                        e.printStackTrace();
-                    }
-
-                    //times in milliseconds
-                    long t1 = today.getTime();
-                    long t2 = headcard_date.getTime();
-                    long time_dif_milisec = t1 - t2;
-
-                    // cards should stay for a minimum specified time in each stage to be review again.
-                    if (time_dif_milisec > my_fc_col_temp_ptr.getMIN_REVIEW_TIME(cur_stage_id)) {
-
-                        // have randomness, if there are more than one card with same time-tag.
-                        int count = -1;
-                        Date card_date_temp = null;
-                        do{
-                            count++;
-                            if (count == cur_stage.get_card_count())
-                                break;
-                            else
-                                try {
-                                    card_date_temp = df.parse(cur_stage.get_cards().get(count).The_statistics.answer_date.getFirst());
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                    //TODO: add error code
-                                }
-                        }while (card_date_temp.compareTo(headcard_date) == 0);
-
-                        rand = new Random();
-                        int index = rand.nextInt(count); // 0 to count-1
-                        cur_card = cur_stage.get_cards().get(index);
-                        next_card_found = true;
-                        break;
-                    } else {
-                        //skip this stage, since it's head card (oldest, and then rest ofs cards) is not old enough
-                        cur_stage_id--;
-                    }
-                }
-            }//while - search for next card
+            // Find next card
+            vocabulary_card next_card = my_fc_col_temp_ptr.find_next_card();
 
             //------------------------------------------------------------
             //------------ update info of next card to GUI
@@ -400,7 +243,7 @@ public class StudyActivity extends Activity {
             ratingBar_NumCorrect.setRating(0);
 
             // give value to strings and convert them to HTML format
-            if (!next_card_found) {
+            if (next_card == null) {
                 string_side1 = "فعلا کارتی موجود نیست.";
                 string_side2 = "";
                 string_examp = "";
@@ -409,13 +252,13 @@ public class StudyActivity extends Activity {
                 string_antonym = "";
                 ratingBar_NumCorrect.setRating(0);
             } else {
-                string_side1 = cur_card.Text_of_First_Language;
-                string_side2 = cur_card.Text_of_Second_Language;
-                string_examp = cur_card.Text_of_examples;
-                string_comment = cur_card.Text_of_comments;
-                string_synonym = cur_card.Text_of_synonyms;
-                string_antonym = cur_card.Text_of_antonyms;
-                ratingBar_NumCorrect.setRating(cur_card.get_stage_id_of_card(my_fc_col_temp_ptr) - 1);
+                string_side1 = next_card.Text_of_First_Language;
+                string_side2 = next_card.Text_of_Second_Language;
+                string_examp = next_card.Text_of_examples;
+                string_comment = next_card.Text_of_comments;
+                string_synonym = next_card.Text_of_synonyms;
+                string_antonym = next_card.Text_of_antonyms;
+                ratingBar_NumCorrect.setRating(next_card.get_stage_id_of_card(my_fc_col_temp_ptr) - 1);
             }
 
             //convert above string HTML format
@@ -448,7 +291,7 @@ public class StudyActivity extends Activity {
             textView_antonym.setText(string_antonym);
             textView_antonym.scrollTo(0, 0);
 
-            // reset the box
+            // reset the check-box
             checkBox_correct.setChecked(false);
 
             //by default, 2nd side of card should be invisible
@@ -471,11 +314,6 @@ public class StudyActivity extends Activity {
                 else
                     tv_title.setPaintFlags(tv_title.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // add underline
             }
-
-
-
-
-
             return;
         } //onClick
     }; //button_next_OnClickListener
@@ -485,13 +323,13 @@ public class StudyActivity extends Activity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //On click listener for comment button
-    //TODO: change current_card into a get_current_card (separating GUI from impl.)
+    //// add some user comment for currently shown card (if exist).
     final View.OnClickListener imageButton_comment_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
 
-            // add some user comment for currently shown card (if exist).
-            if (cur_card != null) {
+            vocabulary_card active_card = my_fc_col_temp_ptr.getActive_card();
+            if (active_card != null) {
 
                 // Set up a text input
                 final EditText input = new EditText(StudyActivity.this);
@@ -502,7 +340,7 @@ public class StudyActivity extends Activity {
                 input.setHorizontalScrollBarEnabled(false); //this
 
                 //load the existing comment's text + pre-text for new comment into text box
-                String comment = cur_card.Text_of_comments;
+                String comment = active_card.Text_of_comments;
                 comment += ("\n\r" + "Comment for revision: ");
                 input.setText(comment);
 
@@ -515,13 +353,12 @@ public class StudyActivity extends Activity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                cur_card.Text_of_comments = input.getText().toString() + "\n\r";
+                                active_card.Text_of_comments = input.getText().toString() + "\n\r";
                             }//onClick
                         })
                         .setNegativeButton(android.R.string.no, null)
                         .show();
-
-            } //manage previously shown card
+            }
 
             return;
 

@@ -53,20 +53,20 @@ public class vocabulary_card {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // in which stage this card is
-    public int get_stage_id_of_card(flashcard_collectin fc){
+    public int get_stage_id_of_card(flashcard_collection fc){
         int i = 0;
 
         if (fc == null)
             return -1;
 
-        for (i = 0; i < flashcard_collectin.getMaxStageNum(); i++) {
+        for (i = 0; i < flashcard_collection.getMaxStageNum(); i++) {
             if (fc.stage_list[i] != null)
                 if (fc.stage_list[i].get_cards() != null)
                     if (fc.stage_list[i].get_cards().contains(this))
                         return i;
         }
 
-        return -1; // if card is inside the flashcard_collectin, never should reach here.
+        return -1; // if card is inside the flashcard_collection, never should reach here.
     }
 
 }

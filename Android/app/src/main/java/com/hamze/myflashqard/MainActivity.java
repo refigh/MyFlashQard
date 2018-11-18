@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     //define an empty flashcard collection. this is the main data structure which the file will be read in to it.
     // it is static final, so other activities can access it easily as singleton.
     //  read more: https://stackoverflow.com/questions/4878159/whats-the-best-way-to-share-data-between-activities
-    private static final flashcard_collectin my_fc_col = new flashcard_collectin();
+    private static final flashcard_collection my_fc_col = new flashcard_collection();
 
     //progress bar
     private ProgressBar progressBar_open;
@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    public static flashcard_collectin getFlashcard() {
+    public static flashcard_collection getFlashcard() {
         return my_fc_col;
     }//getFlashcard
 
@@ -748,7 +748,7 @@ public class MainActivity extends AppCompatActivity {
 
             //DropboxAPI.Entry response = null;
             CharSequence filelist[] = params[0];
-            String FOLDER_NAME_ON_DROPBOX = flashcard_collectin.getFolderNameOnStorage();
+            String FOLDER_NAME_ON_DROPBOX = flashcard_collection.getFolderNameOnStorage();
 
             try {
                 for (int i = 0; i < filelist.length; i++) {
@@ -934,7 +934,7 @@ public class MainActivity extends AppCompatActivity {
             //DropboxAPI.Entry response = null;
             CharSequence filelist[] = params[0];
 
-            String FOLDER_NAME_ON_DROPBOX = flashcard_collectin.getFolderNameOnStorage();
+            String FOLDER_NAME_ON_DROPBOX = flashcard_collection.getFolderNameOnStorage();
             if (!dropbox.exists("/" + FOLDER_NAME_ON_DROPBOX)) {
                 dropbox.createFolder("/" + FOLDER_NAME_ON_DROPBOX);
             }

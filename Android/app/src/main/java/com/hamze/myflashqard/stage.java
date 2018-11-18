@@ -48,9 +48,9 @@ public class stage {
     public void set_Stage_type(int val){ stage_type = val; }
 
     // not tested yet
-    public int get_stage_id(flashcard_collectin fc){
+    public int get_stage_id(flashcard_collection fc){
         int i = 0;
-        for (i = 0; i < flashcard_collectin.getMaxStageNum(); i++) {
+        for (i = 0; i < flashcard_collection.getMaxStageNum(); i++) {
             if (fc.stage_list[i] == this)
                 return i;
         }

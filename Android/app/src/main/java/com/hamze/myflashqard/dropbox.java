@@ -39,7 +39,7 @@ public class dropbox {
     final static private String APP_SECRET = "o3y34w2uassu4bd";
 
     // For now we chose is similar to folder on Android storage. but can be user selectable later
-    final static private String FOLDER_NAME_ON_DROPBOX = flashcard_collectin.getFolderNameOnStorage();
+    final static private String FOLDER_NAME_ON_DROPBOX = flashcard_collection.getFolderNameOnStorage();
 
     private DropboxAPI<AndroidAuthSession> mDBApi;
 

@@ -5,7 +5,7 @@
 package com.hamze.myflashqard;
 
 
-import android.content.res.AssetManager;
+import android.content.res.AssetManager; // TODO: remove GUI-related, non-standard java libs
 import android.os.Environment;
 
 import java.io.File;
@@ -13,6 +13,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.Stack;
 
@@ -22,7 +26,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 
 //A flash card collection is kept in an object of this class.
-public class flashcard_collectin {
+public class flashcard_collection {
 
     //Constants
 
@@ -59,6 +63,12 @@ public class flashcard_collectin {
 
     private static final String FOLDER_NAME_ON_STORAGE = "Flashqard";
 
+    //date format. used in some date format conversions
+    SimpleDateFormat date_format;
+
+    //active card (is expected to be shown on the GUI)
+    private vocabulary_card active_card;
+
     //variables
     private boolean IsOpen;
     private String file_path;
@@ -72,7 +82,7 @@ public class flashcard_collectin {
 
     public String box_name;
 
-    //cards date. Each stage includes a list of cards
+    //list of stages. Each stage includes a list of cards
     public stage[] stage_list;
 
 
@@ -81,7 +91,7 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // Constructor
-    flashcard_collectin() {
+    flashcard_collection() {
         authoremail = "";
         license = "";
         author = "";
@@ -91,6 +101,10 @@ public class flashcard_collectin {
         box_name = "";
         IsOpen = false;
         file_path = "";
+
+        date_format = new SimpleDateFormat("d.M.yyyy");
+
+        active_card = null;
 
         //Creating empty stage list and cards
         stage_list = new stage[MAX_STAGE_NUM];
@@ -614,6 +628,178 @@ public class flashcard_collectin {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
+    // after answering, move the active card (shown on GUI) to proper place.
+    public void move_active_card(boolean is_card_passed){
+
+
+        // in 2 situations there is no active card, before starting the review, and after finishing
+        // all cards.
+        if (active_card != null) {
+
+            String today_formatted = getToday_formatted();
+
+            //update date and answer (for now, only info of last card review is stored)
+            active_card.The_statistics.answer_date.clear();
+            active_card.The_statistics.answer_date.add(today_formatted);
+            active_card.The_statistics.answer_value.clear();
+            active_card.The_statistics.answer_value.add(is_card_passed ? "true" : "false");
+
+            int cur_stage_id = active_card.get_stage_id_of_card(this);
+
+            //TODO: add error codes
+            assert( (1 <= cur_stage_id) && (cur_stage_id <= (getMaxStageNum() - 1))  );
+
+            //find destination stage (for correct or wrong answer)
+            int dest_stage_id = -1;
+            if (is_card_passed) {
+                if (cur_stage_id < (getMaxStageNum() - 1))
+                    dest_stage_id = cur_stage_id + 1; // go next
+                else
+                    dest_stage_id = cur_stage_id; //stay in final stage (? just in case, we should never review last stage)
+
+            } else {
+                //TODO: moving the wrong card into start-state or prev. state should be an option.
+                //dest_stage_id = 1;
+                if (cur_stage_id > 1) //TODO: starting state, should be a constant, not 1
+                    dest_stage_id = cur_stage_id - 1;
+                else
+                    dest_stage_id = 1;
+            }
+
+            //move active_card to dest stage
+            //even if it is from/to same stage, it is removed and added to put card to the end
+            stage_list[cur_stage_id].get_cards().remove(active_card); // must return true...
+            stage_list[dest_stage_id].get_cards().addLast(active_card);
+            stage_list[dest_stage_id].set_Stage_type(stage.ACTIVE_STAGE); //activate the stage, if it is not.
+
+        } //manage previously shown card (active_card)
+
+    }
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    /* Find next card to review, after searching
+    card selection policy: FC-FS, older cards have higher priority. Because number of cards is
+    large. Then, for reviewing a limited number of cards per day, it is good to have a small
+    moving active set, than a huge slow-moving set.
+
+    Then, we start to search from top stage backward. In each stage, we start from head (older) card.
+    No card will be selected from final stage (finish stage). Then search is started from stage
+    before to last
+    */
+    public vocabulary_card find_next_card(){
+
+        vocabulary_card next_card = null;
+        int stage_id = getMaxStageNum() - 2; // sweeping all stages from end to start
+        while (true) {
+
+            //finally, card was not found
+            if (stage_id < 1)
+                break;
+
+            stage cur_stage = stage_list[stage_id];
+            //skip inactive or empty stages
+            if ((cur_stage.get_Stage_type() == stage.INACTIVE_STAGE) || cur_stage.get_cards().isEmpty()) {
+                stage_id--;
+                continue;
+            }
+
+            // head-card is fresh (no date), it is selected.
+            // when head has no date, it is expected to not happen other than start stage (a very fresh card)
+            // but it may happen in other states due to manual card movement (in PC tool)
+            else if (cur_stage.get_cards().getFirst().The_statistics.answer_date.isEmpty() ) {
+                next_card = cur_stage.get_cards().getFirst();
+                break;
+            }
+
+            // head card has date (already reviewed)
+            else {
+                // find time difference between now and head-card
+                // note that, head-card of each stage is the oldest.
+                Date headcard_date = null;
+                try {
+                    headcard_date = date_format.parse(cur_stage.get_cards().getFirst().The_statistics.answer_date.getFirst());
+                } catch (ParseException e) {
+                    //TODO: assign new type of error due to time format error
+                    e.printStackTrace();
+                }
+
+                //times in milliseconds
+                long t1 = getToday().getTime();
+                long t2 = headcard_date.getTime();
+                long time_dif_milisec = t1 - t2;
+
+                // cards should stay for a minimum specified time in each stage to be review again.
+                if (time_dif_milisec > getMIN_REVIEW_TIME(stage_id)) {
+
+                    // have randomness, if there are more than one card with same time-tag.
+                    int count = -1;
+                    Date card_date_temp = null;
+                    do{
+                        count++;
+                        if (count == cur_stage.get_card_count())
+                            break;
+                        else
+                            try {
+                                card_date_temp = date_format.parse(cur_stage.get_cards().get(count).The_statistics.answer_date.getFirst());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                //TODO: add error code
+                            }
+                    }while (card_date_temp.compareTo(headcard_date) == 0);
+
+                    Random rand = new Random();
+                    int index = rand.nextInt(count); // 0 to count-1
+                    next_card = cur_stage.get_cards().get(index);
+                    break;
+                } else {
+                    //skip this stage, since it's head card (oldest, and then rest ofs cards) is not old enough
+                    stage_id--;
+                }
+            }
+        }//while - search for next card
+
+        active_card = next_card;
+
+        return active_card;
+    }
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Get today
+    Date getToday() {
+        //Today
+        Calendar cal = Calendar.getInstance();
+        cal.clear(cal.MILLISECOND); //our precision is day.
+        cal.clear(cal.SECOND);
+        cal.clear(cal.MINUTE);
+        cal.clear(cal.HOUR);
+
+        //Today
+        Date today = cal.getTime();
+
+        return today;
+    }
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // Get today, with my format
+    String getToday_formatted(){
+        Date today = getToday();
+        String today_formatted = date_format.format(today);
+        return today_formatted;
+    }
+
+
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     // Get functions
     public static int getMaxStageNum() {
         return MAX_STAGE_NUM;
@@ -642,5 +828,9 @@ public class flashcard_collectin {
         return temp;
     }
 
+    //get already active card (without searching)
+    public vocabulary_card getActive_card() {
+        return active_card;
+    }
 
 }
