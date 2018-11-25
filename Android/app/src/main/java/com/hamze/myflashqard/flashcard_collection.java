@@ -666,15 +666,44 @@ public class flashcard_collection {
                     dest_stage_id = 1;
             }
 
-            //move active_card to dest stage
+            //move active_card to END of dest stage (no need to sort)
             //even if it is from/to same stage, it is removed and added to put card to the end
-            stage_list[cur_stage_id].get_cards().remove(active_card); // must return true...
+            stage_list[cur_stage_id].get_cards().remove(active_card); // TODO:must return true...
             stage_list[dest_stage_id].get_cards().addLast(active_card);
             stage_list[dest_stage_id].set_Stage_type(stage.ACTIVE_STAGE); //activate the stage, if it is not.
 
-        } //manage previously shown card (active_card)
+            nullify_active_card();
+        } // if (active_card != null)
 
-    }
+    }// void move_active_card(boolean is_card_passed)
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    // without answering, keep the active card (shown on GUI) in the same stage, but change
+    // the reviewing time-tag to be reviewed on tomorrow.
+    public void postpone_active_card(){
+
+
+        if (active_card != null) {
+
+            //String today_formatted = getToday_formatted();
+
+            int cur_stage_id = active_card.get_stage_id_of_card(this);
+            stage_list[cur_stage_id].get_cards().remove(active_card);
+
+            // TODO: for now, I just move it to end, but
+            // 1- time-tag to be set to be review on tomorrow
+            // 2- insert the card into a sorted array
+            stage_list[cur_stage_id].get_cards().addLast(active_card);
+
+
+            nullify_active_card();
+        } //if (active_card != null)
+
+    }//void postpone_active_card()
+
 
 
     //----------------------------------------------------------------------------------------
@@ -689,7 +718,7 @@ public class flashcard_collection {
     No card will be selected from final stage (finish stage). Then search is started from stage
     before to last
     */
-    public vocabulary_card find_next_card(){
+    public vocabulary_card find_next_active_card(){
 
         vocabulary_card next_card = null;
         int stage_id = getMaxStageNum() - 2; // sweeping all stages from end to start
@@ -829,12 +858,12 @@ public class flashcard_collection {
     }
 
     //get already active card (without searching)
-    public vocabulary_card getActive_card() {
+    public vocabulary_card get_active_card() {
         return active_card;
     }
 
     //clear active card
-    public void No_Active_card() {
+    public void nullify_active_card() {
         active_card = null;
     }
 

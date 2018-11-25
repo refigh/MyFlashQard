@@ -136,10 +136,18 @@
                     android:text="مترادف" />
 
                 <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:tag="tab3"
+                android:text="متضاد" />
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:tag="tab3"
-                    android:text="متضاد" />
+                    android:tag="tab4"
+                    android:text="برچسب ها" />
+
 
             </TabWidget>
 
@@ -149,7 +157,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
-                <!--tab1-->
+                <!--tab0-->
                 <TextView
                     android:id="@+id/textView_example"
                     android:layout_width="match_parent"
@@ -160,7 +168,7 @@
                     android:textColor="#000"
                     android:textSize="16sp" />
 
-                <!--tab2-->
+                <!--tab1-->
                 <TextView
                     android:id="@+id/textView_comment"
                     android:layout_width="match_parent"
@@ -171,7 +179,7 @@
                     android:textColor="#000"
                     android:textSize="16sp" />
 
-                <!--tab3-->
+                <!--tab2-->
                 <TextView
                     android:id="@+id/textView_synonym"
                     android:layout_width="match_parent"
@@ -182,9 +190,20 @@
                     android:textColor="#000"
                     android:textSize="16sp" />
 
-                <!--tab4-->
+                <!--tab3-->
                 <TextView
                     android:id="@+id/textView_antonym"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DCDCDC"
+                    android:scrollbars="vertical"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <!--tab4-->
+                <TextView
+                    android:id="@+id/textView_labels"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#DCDCDC"
@@ -203,24 +222,27 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/button_next"
+            android:id="@+id/button_next_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.04"
+            android:layout_weight="0.40"
             android:text="بعدی" />
 
         <Button
-            android:id="@+id/button_show"
+            android:id="@+id/button_show_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.30"
             android:text="کارت را برگردان" />
 
-        <CheckBox
-            android:id="@+id/checkBox_correct"
+        <Button
+            android:id="@+id/button_skip_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.60"
-            android:text="آیا حدستان درست بود؟" />
+            android:layout_weight="0.30"
+            android:text="فعلا بپر" />
+
+
     </TableRow>
 
     <TableRow
@@ -229,9 +251,26 @@
 
     </TableRow>
 
-    <Button
-        android:id="@+id/button_close_study"
+    <TableRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="پایان آزمون" />
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/checkBox_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:text="آیا حدستان درست بود؟" />
+
+        <Button
+          android:id="@+id/button_close_study"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.70"
+          android:text="پایان آزمون" />
+
+
+
+    </TableRow>
+
 </LinearLayout>

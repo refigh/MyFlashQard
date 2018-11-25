@@ -19,6 +19,7 @@ public class vocabulary_card {
     public String Text_of_comments;
     public String Text_of_synonyms;
     public String Text_of_antonyms;
+    public String Text_of_labels;
     public statistics The_statistics;
 
     //----------------------------------------------------------------------------------------
@@ -37,6 +38,7 @@ public class vocabulary_card {
         Text_of_comments = "";
         Text_of_synonyms = "";
         Text_of_antonyms = "";
+        Text_of_labels = "No label for now!";
         The_statistics = new statistics();
     }
 
