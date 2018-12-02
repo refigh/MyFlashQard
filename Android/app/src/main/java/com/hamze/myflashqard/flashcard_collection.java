@@ -64,7 +64,7 @@ public class flashcard_collection {
     private static final String FOLDER_NAME_ON_STORAGE = "Flashqard";
 
     //date format. used in some date format conversions
-    SimpleDateFormat date_format;
+    private SimpleDateFormat date_format;
 
     //active card (is expected to be shown on the GUI)
     private vocabulary_card active_card;
@@ -119,7 +119,10 @@ public class flashcard_collection {
             // X, 1, 2, 4, 8, 16, 32, ...
             long number_of_days = (long) Math.pow(2, (i - 1)); //TODO: make formulation optional, linear
             MIN_REVIEW_TIME[i] = number_of_days * 24 * 60 * 60 * 1000; //convert from day to millisecond;
-            MIN_REVIEW_TIME[i] -= 1000000; //reduce a small number for avoid marginal calculation problem.
+
+            //reduce a small number (about 3 hours) for: avoid marginal calculation problem,
+            //   or +/- GMT time change during day-light-saving...
+            MIN_REVIEW_TIME[i] -= (3 * 60 * 60 * 1000);
         }
 
     }// constructor
@@ -349,6 +352,14 @@ public class flashcard_collection {
             return false;
         }
 
+        //Sorting cards in each stage, by 'answering date'
+        boolean sorting_ok = true;
+        for (int i = 1; i < MAX_STAGE_NUM; i++)  // skip 0: stack stage
+            sorting_ok &= stage_list[i].sort_cards();
+        if (!sorting_ok)
+            error_obj.set_error_code(20); //"Error in Sorting, after opening the file"
+
+
         IsOpen = true;
         return true;
     } //method: Read_file_to_array
@@ -533,7 +544,7 @@ public class flashcard_collection {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    //Close the currently open flashcard
+    //Close and clear the open flashcard collection
     public void close() {
         authoremail = "";
         license = "";
@@ -625,18 +636,19 @@ public class flashcard_collection {
         return temp_count;
     }
 
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // after answering, move the active card (shown on GUI) to proper place.
-    public void move_active_card(boolean is_card_passed){
+    public void move_active_card_after_review(boolean is_card_passed){
 
 
         // in 2 situations there is no active card, before starting the review, and after finishing
         // all cards.
         if (active_card != null) {
 
-            String today_formatted = getToday_formatted();
+            String today_formatted = getToday_formatted(0);
 
             //update date and answer (for now, only info of last card review is stored)
             active_card.The_statistics.answer_date.clear();
@@ -675,7 +687,7 @@ public class flashcard_collection {
             nullify_active_card();
         } // if (active_card != null)
 
-    }// void move_active_card(boolean is_card_passed)
+    }// void move_active_card_after_review(boolean is_card_passed)
 
 
     //----------------------------------------------------------------------------------------
@@ -683,42 +695,46 @@ public class flashcard_collection {
     //----------------------------------------------------------------------------------------
     // without answering, keep the active card (shown on GUI) in the same stage, but change
     // the reviewing time-tag to be reviewed on tomorrow.
-    public void postpone_active_card(){
+    public void skip_active_card_without_review(){
 
 
         if (active_card != null) {
 
-            //String today_formatted = getToday_formatted();
-
             int cur_stage_id = active_card.get_stage_id_of_card(this);
-            stage_list[cur_stage_id].get_cards().remove(active_card);
 
-            // TODO: for now, I just move it to end, but
-            // 1- time-tag to be set to be review on tomorrow
-            // 2- insert the card into a sorted array
-            stage_list[cur_stage_id].get_cards().addLast(active_card);
+            //below formulation set the card's date exactly to be reviewed on tomorrow (+1 is for tomorrow).
+            int day_offset = -(int) Math.ceil(getMIN_REVIEW_TIME(cur_stage_id)/(24.0 * 60 * 60 * 1000));
+            day_offset += 1; // tomorrow
+
+            String date_formatted = getToday_formatted(day_offset);
+
+            active_card.The_statistics.answer_date.clear();
+            active_card.The_statistics.answer_date.add(date_formatted);
+
+            // after changing the card's date, remove and re-insert it into same stage.
+            stage_list[cur_stage_id].get_cards().remove(active_card);
+            stage_list[cur_stage_id].insert_card_into_sorted_stage(active_card, stage_list[cur_stage_id].get_card_count());
 
 
             nullify_active_card();
         } //if (active_card != null)
 
-    }//void postpone_active_card()
-
+    }//void skip_active_card_without_review()
 
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    /* Find next card to review, after searching
-    card selection policy: FC-FS, older cards have higher priority. Because number of cards is
-    large. Then, for reviewing a limited number of cards per day, it is good to have a small
-    moving active set, than a huge slow-moving set.
-
-    Then, we start to search from top stage backward. In each stage, we start from head (older) card.
-    No card will be selected from final stage (finish stage). Then search is started from stage
-    before to last
-    */
-    public vocabulary_card find_next_active_card(){
+    //Find next card to review, after searching
+    //card selection policy: FC-FS, older cards have higher priority. Because number of cards is
+    //large. Then, for reviewing a limited number of cards per day, it is good to have a small
+    //moving active set, than a huge slow-moving set.
+    //
+    //Then, we start to search from top stage backward. In each stage, we start from head (older) card.
+    //No card will be selected from final stage (finish stage). Then search is started from stage
+    //before to last
+    //
+    public vocabulary_card find_next_card_for_review(){
 
         vocabulary_card next_card = null;
         int stage_id = getMaxStageNum() - 2; // sweeping all stages from end to start
@@ -756,7 +772,7 @@ public class flashcard_collection {
                 }
 
                 //times in milliseconds
-                long t1 = getToday().getTime();
+                long t1 = getToday(0).getTime();
                 long t2 = headcard_date.getTime();
                 long time_dif_milisec = t1 - t2;
 
@@ -795,35 +811,41 @@ public class flashcard_collection {
         return active_card;
     }
 
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // Get today
-    Date getToday() {
+    // Get today (+ day_offset)
+    Date getToday(int day_offset) {
         //Today
         Calendar cal = Calendar.getInstance();
-        cal.clear(cal.MILLISECOND); //our precision is day.
+
+        //Today + day_offset
+        cal.add(Calendar.DATE, day_offset);
+
+        //our precision is day.
+        cal.clear(cal.MILLISECOND);
         cal.clear(cal.SECOND);
         cal.clear(cal.MINUTE);
-        cal.clear(cal.HOUR);
+        //cal.clear(cal.HOUR_OF_DAY);
+        //cal.clear(cal.HOUR);
+        cal.set(Calendar.HOUR_OF_DAY, 0); //two above did not work, because they consider GMT time
 
-        //Today
         Date today = cal.getTime();
 
         return today;
     }
 
+
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
-    // Get today, with my format
-    String getToday_formatted(){
-        Date today = getToday();
+    // Get today (plus day_offset), with my format
+    String getToday_formatted(int day_offset){
+        Date today = getToday(day_offset);
         String today_formatted = date_format.format(today);
         return today_formatted;
     }
-
-
 
 
     //----------------------------------------------------------------------------------------

@@ -3,6 +3,8 @@
   <stack>
   </stack>
   <stage>
+  </stage>
+  <stage>
    <card type="vocabulary" >
     <translationdocument language="First Language" >
      <html>a_word</html>

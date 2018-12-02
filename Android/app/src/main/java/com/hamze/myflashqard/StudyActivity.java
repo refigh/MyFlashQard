@@ -245,10 +245,10 @@ public class StudyActivity extends Activity {
         public void onClick(final View v) {
 
             // Before go to next card, move active card to proper stage.
-            my_fc_col_temp_ptr.postpone_active_card();
+            my_fc_col_temp_ptr.skip_active_card_without_review();
 
             // find next card
-            vocabulary_card next_card = my_fc_col_temp_ptr.find_next_active_card();
+            vocabulary_card next_card = my_fc_col_temp_ptr.find_next_card_for_review();
 
             // update info of next card to GUI
             display_card_info(next_card);
@@ -269,10 +269,10 @@ public class StudyActivity extends Activity {
         public void onClick(final View v) {
 
             // Before go to next card, move current active card to new stage
-            my_fc_col_temp_ptr.move_active_card(checkBox_correct.isChecked());
+            my_fc_col_temp_ptr.move_active_card_after_review(checkBox_correct.isChecked());
 
             // Find next card
-            vocabulary_card next_card = my_fc_col_temp_ptr.find_next_active_card();
+            vocabulary_card next_card = my_fc_col_temp_ptr.find_next_card_for_review();
 
             // update info of next card to GUI
             display_card_info(next_card);

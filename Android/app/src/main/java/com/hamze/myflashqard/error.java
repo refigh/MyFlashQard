@@ -34,7 +34,7 @@ public class error {
         error_description[17] = "File can not be uploaded";
         error_description[18] = "File can not be renamed";
         error_description[19] = "Error in Dropbox or file access during download";
-        error_description[20] = "";
+        error_description[20] = "Error in Sorting, after opening the file";
         error_description[21] = "";
         error_description[22] = "";
         error_description[23] = "";
