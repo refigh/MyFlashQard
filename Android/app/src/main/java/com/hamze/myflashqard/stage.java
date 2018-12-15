@@ -127,7 +127,7 @@ public class stage {
             if (card.The_statistics.answer_date.isEmpty())
                 card_date_temp = OLD_TIME.getTime();
             else
-                card_date_temp = date_format.parse(card.The_statistics.answer_date.getFirst());
+                card_date_temp = date_format.parse(card.The_statistics.answer_date.getLast());
         } catch (ParseException e) {
             e.printStackTrace();
             //TODO: add error code

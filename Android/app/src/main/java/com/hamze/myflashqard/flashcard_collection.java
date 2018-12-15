@@ -790,7 +790,7 @@ public class flashcard_collection {
                 // note that, head-card of each stage is the oldest.
                 Date headcard_date = null;
                 try {
-                    headcard_date = date_format.parse(cur_stage.get_cards().getFirst().The_statistics.answer_date.getFirst());
+                    headcard_date = date_format.parse(cur_stage.get_cards().getFirst().The_statistics.answer_date.getLast());
                 } catch (ParseException e) {
                     //TODO: assign new type of error due to time format error
                     e.printStackTrace();
@@ -813,7 +813,7 @@ public class flashcard_collection {
                             break;
                         else
                             try {
-                                card_date_temp = date_format.parse(cur_stage.get_cards().get(count).The_statistics.answer_date.getFirst());
+                                card_date_temp = date_format.parse(cur_stage.get_cards().get(count).The_statistics.answer_date.getLast());
                             } catch (ParseException e) {
                                 e.printStackTrace();
                                 //TODO: add error code
