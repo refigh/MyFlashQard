@@ -230,7 +230,7 @@ public class flashcard_collection {
                         case TG_STACK: //stack
                             if (stage_counter == -1) {
                                 stage_counter = 0;
-                                stage_list[0].set_Stage_type(stage.STACK_STAGE);
+                                stage_list[0].set_Stage_type(stage.STAGE_TYPES.STACK_STAGE);
                             } else {
                                 //error: just one stack should exist
                                 error_obj.set_error_code(6);
@@ -241,7 +241,7 @@ public class flashcard_collection {
 
                         case TG_STAGE: //stage
                             stage_counter++;
-                            stage_list[stage_counter].set_Stage_type(stage.ACTIVE_STAGE);
+                            stage_list[stage_counter].set_Stage_type(stage.STAGE_TYPES.ACTIVE_STAGE);
                             break;
 
                         case TG_CARD: //card
@@ -419,14 +419,14 @@ public class flashcard_collection {
 
 
             int stg_cnt = 0;
-            if (stage_list[0].get_Stage_type() == stage.INACTIVE_STAGE) { //even if flashcard collection is empty, write empty stack
+            if (stage_list[0].get_Stage_type() == stage.STAGE_TYPES.INACTIVE_STAGE) { //even if flashcard collection is empty, write empty stack
                 writer.write("  <" + TG_STACK + ">\n");
                 writer.write("  </" + TG_STACK + ">\n");
             } else
 
                 while (stg_cnt < MAX_STAGE_NUM) {
 
-                    if (stage_list[stg_cnt].get_Stage_type() == stage.INACTIVE_STAGE) //from now on, all are inactive.
+                    if (stage_list[stg_cnt].get_Stage_type() == stage.STAGE_TYPES.INACTIVE_STAGE) //from now on, all are inactive.
                         break;
 
                     if (stg_cnt == 0)
@@ -465,9 +465,22 @@ public class flashcard_collection {
 
                         writer.write("    <" + TG_STAT + ">\n");
                         writer.write("     <" + TG_CR_DATE + ">" + curr_card.The_statistics.dateCreated + "</" + TG_CR_DATE + ">\n");
-                        if (curr_card.The_statistics.answer_date != null)
-                            for (int j = 0; j < curr_card.The_statistics.answer_date.size(); j++)
-                                writer.write("     <" + TG_ANS + " date=\"" + curr_card.The_statistics.answer_date.get(j) + "\" >" + curr_card.The_statistics.answer_value.get(j) + "</" + TG_ANS + ">\n");
+                        if (curr_card.The_statistics.answer_date != null){
+                            for (int j = 0; j < curr_card.The_statistics.answer_date.size(); j++) {
+
+                                //TODO: how to use assert?
+                                //assert(curr_card.The_statistics.answer_date.size() == curr_card.The_statistics.answer_value.size());
+                                if (curr_card.The_statistics.answer_date.size() != curr_card.The_statistics.answer_value.size()) {
+                                    error_obj.set_error_code(21); //"Error in card statistics, answer_date.size != answer_value.size";
+                                    return false;
+                                }
+
+
+                                String str1 = curr_card.The_statistics.answer_date.get(j);
+                                String str2 = curr_card.The_statistics.answer_value.get(j);
+                                writer.write("     <" + TG_ANS + " date=\"" + str1 + "\" >" + str2 + "</" + TG_ANS + ">\n");
+                            }
+                        }
 
                         writer.write("    </" + TG_STAT + ">\n");
 
@@ -513,7 +526,7 @@ public class flashcard_collection {
             return; //wrong code, return without suffle.
 
 
-        while ((stage_list[stg_cnt].get_Stage_type() != stage.INACTIVE_STAGE) && (stg_cnt < MAX_STAGE_NUM)) {
+        while ((stage_list[stg_cnt].get_Stage_type() != stage.STAGE_TYPES.INACTIVE_STAGE) && (stg_cnt < MAX_STAGE_NUM)) {
             int size = stage_list[stg_cnt].get_card_count();
             for (int i = 0; i < size; i++) {
 
@@ -557,7 +570,7 @@ public class flashcard_collection {
         file_path = "";
 
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            stage_list[i].set_Stage_type(stage.INACTIVE_STAGE);
+            stage_list[i].set_Stage_type(stage.STAGE_TYPES.INACTIVE_STAGE);
             stage_list[i].get_cards().clear(); // clear the link list in each stage
         }
 
@@ -582,7 +595,7 @@ public class flashcard_collection {
 
         //clear current open data
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            stage_list[i].set_Stage_type(stage.INACTIVE_STAGE);
+            stage_list[i].set_Stage_type(stage.STAGE_TYPES.INACTIVE_STAGE);
             stage_list[i].get_cards().clear(); // clear the link list in each stage
         }
 
@@ -629,7 +642,7 @@ public class flashcard_collection {
         int temp_count = 0;
         //count cards (stack+active stage.). we do not expect any card to be in inactive stages.
         for (int i = 0; i < MAX_STAGE_NUM; i++) {
-            if (stage_list[i].get_Stage_type() == stage.INACTIVE_STAGE)
+            if (stage_list[i].get_Stage_type() == stage.STAGE_TYPES.INACTIVE_STAGE)
                 break;
             temp_count += stage_list[i].get_card_count();
         }
@@ -641,7 +654,7 @@ public class flashcard_collection {
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
     // after answering, move the active card (shown on GUI) to proper place.
-    public void move_active_card_after_review(boolean is_card_passed){
+    public void move_active_card_after_review(boolean is_card_passed, boolean is_card_easy){
 
 
         // in 2 situations there is no active card, before starting the review, and after finishing
@@ -654,7 +667,7 @@ public class flashcard_collection {
             active_card.The_statistics.answer_date.clear();
             active_card.The_statistics.answer_date.add(today_formatted);
             active_card.The_statistics.answer_value.clear();
-            active_card.The_statistics.answer_value.add(is_card_passed ? "true" : "false");
+            active_card.The_statistics.answer_value.add(is_card_easy ? "true" : (is_card_passed ? "true" : "false"));
 
             int cur_stage_id = active_card.get_stage_id_of_card(this);
 
@@ -663,7 +676,12 @@ public class flashcard_collection {
 
             //find destination stage (for correct or wrong answer)
             int dest_stage_id = -1;
-            if (is_card_passed) {
+
+            // move easy cards directly to last stage
+            if (is_card_easy) {
+                dest_stage_id = (getMaxStageNum() - 1);
+
+            } else if (is_card_passed) {
                 if (cur_stage_id < (getMaxStageNum() - 1))
                     dest_stage_id = cur_stage_id + 1; // go next
                 else
@@ -682,7 +700,11 @@ public class flashcard_collection {
             //even if it is from/to same stage, it is removed and added to put card to the end
             stage_list[cur_stage_id].get_cards().remove(active_card); // TODO:must return true...
             stage_list[dest_stage_id].get_cards().addLast(active_card);
-            stage_list[dest_stage_id].set_Stage_type(stage.ACTIVE_STAGE); //activate the stage, if it is not.
+
+            //activate the stages, if they are not.
+            for (int i = 1; i <= dest_stage_id; i++) {
+                stage_list[i].set_Stage_type(stage.STAGE_TYPES.ACTIVE_STAGE);
+            }
 
             nullify_active_card();
         } // if (active_card != null)
@@ -706,14 +728,17 @@ public class flashcard_collection {
             int day_offset = -(int) Math.ceil(getMIN_REVIEW_TIME(cur_stage_id)/(24.0 * 60 * 60 * 1000));
             day_offset += 1; // tomorrow
 
-            String date_formatted = getToday_formatted(day_offset);
+            String date_formatted =  getToday_formatted(day_offset); //"11.11.2017";
 
             active_card.The_statistics.answer_date.clear();
             active_card.The_statistics.answer_date.add(date_formatted);
+            active_card.The_statistics.answer_value.clear();
+            active_card.The_statistics.answer_value.add("false"); //"true"
+
 
             // after changing the card's date, remove and re-insert it into same stage.
             stage_list[cur_stage_id].get_cards().remove(active_card);
-            stage_list[cur_stage_id].insert_card_into_sorted_stage(active_card, stage_list[cur_stage_id].get_card_count());
+            stage_list[cur_stage_id].insert_card_into_sorted_list(active_card, stage_list[cur_stage_id].get_card_count());
 
 
             nullify_active_card();
@@ -746,7 +771,7 @@ public class flashcard_collection {
 
             stage cur_stage = stage_list[stage_id];
             //skip inactive or empty stages
-            if ((cur_stage.get_Stage_type() == stage.INACTIVE_STAGE) || cur_stage.get_cards().isEmpty()) {
+            if ((cur_stage.get_Stage_type() == stage.STAGE_TYPES.INACTIVE_STAGE) || cur_stage.get_cards().isEmpty()) {
                 stage_id--;
                 continue;
             }
@@ -870,7 +895,7 @@ public class flashcard_collection {
         int temp = 0;
 
         for (int i = 2; i < MAX_STAGE_NUM; i++) {
-            if (stage_list[i].get_Stage_type() == stage.INACTIVE_STAGE)
+            if (stage_list[i].get_Stage_type() == stage.STAGE_TYPES.INACTIVE_STAGE)
                 break;
             temp += (stage_list[i].get_card_count())*(i-1);
         }

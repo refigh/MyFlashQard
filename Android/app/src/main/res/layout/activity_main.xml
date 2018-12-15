@@ -267,7 +267,7 @@
         android:editable="false"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="بدون اجازه منتشر نشود. نسخه 1.30" />
+        android:text="بدون اجازه منتشر نشود. نسخه 1.31" />
 
 
 </LinearLayout>

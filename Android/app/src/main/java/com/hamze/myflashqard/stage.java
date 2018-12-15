@@ -20,13 +20,15 @@ public class stage {
     //date format. used in some date format conversions
     private SimpleDateFormat date_format;
 
-    //just a very old dummy time (meaning time=-inf)
+    //A very old dummy constant time (represents time=-inf)
     Calendar OLD_TIME;
 
-    private int stage_type; //all inactive stages should be at the end of list.
-    public static final int STACK_STAGE = 0;  // cards which will not be reviewed
-    public static final int INACTIVE_STAGE = -1;
-    public static final int ACTIVE_STAGE = 1;
+    public enum STAGE_TYPES {
+        STACK_STAGE,
+        INACTIVE_STAGE, //all inactive stages should be at the end of list.
+        ACTIVE_STAGE
+    }
+    private STAGE_TYPES stage_type;
 
 
     //----------------------------------------------------------------------------------------
@@ -34,7 +36,8 @@ public class stage {
     //----------------------------------------------------------------------------------------
     // Constructor
     stage(){
-        set_Stage_type(INACTIVE_STAGE);
+        set_Stage_type(STAGE_TYPES.INACTIVE_STAGE);
+
         cards = new LinkedList<vocabulary_card>();
         cards.clear();
 
@@ -46,27 +49,26 @@ public class stage {
     }
 
 
-    //Sort cards by date (sort algorithm type: insertion sort)
-    //TODO: comparision should be done from right, not left (for quick skipping already sorted list)
-    //      currently sorting is slow at load time. moreover, sorting should not change order
-    //      of cards with same time tag
+    //Sort cards of this stage by 'answer date'.
+    //Sort algorithm type: insertion sort.
+    //comparision is done from right, not left (for quick skipping already sorted list)
     public boolean sort_cards() {
 
-        if (get_card_count() <= 1 )
+        int card_num = get_card_count();
+
+        if (card_num <= 1 )
             return true;
 
-        // only go for sorting, if it is not already sorted
-        if (!is_sorted()){
+        //perform sorting if not sorted
+        if (!is_sorted()) {
             vocabulary_card temp_card = null;
-
-            for (int i = 0; i < get_card_count(); i++) {
+            for (int i = 1; i < card_num; i++) { //0: not needed
                 temp_card = get_cards().get(i);
                 get_cards().remove(temp_card);
-                insert_card_into_sorted_stage(temp_card, i);
+                insert_card_into_sorted_list(temp_card, i);
             }
         }
-
-        // it expected to always be true, that is only for diagnostics of sorting function.
+        // it expected to always be true, but it is only for diagnostics of sorting function.
         return is_sorted();
     }
 
@@ -75,90 +77,64 @@ public class stage {
     private boolean is_sorted() {
 
         boolean sorted = true;
-        vocabulary_card temp_card1 = null;
-        vocabulary_card temp_card2 = null;
         Date temp_card1_date = null;
         Date temp_card2_date = null;
 
         for (int i = 0; i < get_card_count()-1; i++) {
-            temp_card1 = get_cards().get(i);
-            temp_card2 = get_cards().get(i+1);
 
-            // assign temp very big time
-            if (temp_card1.The_statistics.answer_date.isEmpty())
-                temp_card1_date = OLD_TIME.getTime();
-            else {
-                try {
-                    temp_card1_date = date_format.parse(temp_card1.The_statistics.answer_date.getFirst());
-                } catch (ParseException e) {
-                    //TODO: assign new type of error due to time format error
-                    e.printStackTrace();
-                }
-            }
-
-            if (temp_card2.The_statistics.answer_date.isEmpty())
-                temp_card2_date = OLD_TIME.getTime();
-            else {
-                try {
-                    temp_card2_date = date_format.parse(temp_card2.The_statistics.answer_date.getFirst());
-                } catch (ParseException e) {
-                    //TODO: assign new type of error due to time format error
-                    e.printStackTrace();
-                }
-            }
+            temp_card1_date = get_card_answer_date(get_cards().get(i));
+            temp_card2_date = get_card_answer_date(get_cards().get(i+1));
 
             if (temp_card1_date.compareTo(temp_card2_date) > 0){
                 sorted = false;
                 break;
             }
-
         }
-
         return sorted;
     }
 
 
+    //insert a new card into a (presumably sorted) stage (like insertion sort, from index 0<= to <sub_list_size )
+    public void insert_card_into_sorted_list(vocabulary_card new_card, int sub_list_size) {
 
-    //insert a new card into a (presumably sorted) stage (like insertion sort)
-    public void insert_card_into_sorted_stage(vocabulary_card new_card, int sub_list_size) {
+        //read new card's date
+        Date new_card_date = get_card_answer_date(new_card);
 
-        // no_date is assumed to be "inf", or highest-priority
-        if (new_card.The_statistics.answer_date.isEmpty()) {
-            get_cards().addFirst(new_card);
-            return;
-        } else {
+        // find right place for new card
+        int indx = sub_list_size;
+        Date card_date_temp = null;
 
-            //read new card's date
-            Date new_card_date = null;
-            try {
-                new_card_date = date_format.parse(new_card.The_statistics.answer_date.getFirst());
-            } catch (ParseException e) {
-                //TODO: assign new type of error due to time format error
-                e.printStackTrace();
+        do {
+            indx--;
+            if (indx == -1)
+                break;
+            else {
+                card_date_temp = get_card_answer_date(get_cards().get(indx));
             }
 
-            // find right place for new card
-            int indx = -1;
-            Date card_date_temp = null;
-            do {
-                indx++;
-                if (indx == sub_list_size) // same as insertion sort, we stop by an index
-                    break;
-                else
-                    try {
-                        if (get_cards().get(indx).The_statistics.answer_date.isEmpty())
-                            card_date_temp = OLD_TIME.getTime();
-                        else
-                            card_date_temp = date_format.parse(get_cards().get(indx).The_statistics.answer_date.getFirst());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        //TODO: add error code
-                    }
-            } while (new_card_date.compareTo(card_date_temp) > 0);
+        } while (new_card_date.compareTo(card_date_temp) < 0); // same as insertion sort, we stop by an index
 
-            get_cards().add(indx, new_card);
-        }
+        get_cards().add(indx+1, new_card);
+
     }
+
+
+    private Date get_card_answer_date(vocabulary_card card) {
+        Date card_date_temp = null;
+
+        //read card time
+        try {
+            if (card.The_statistics.answer_date.isEmpty())
+                card_date_temp = OLD_TIME.getTime();
+            else
+                card_date_temp = date_format.parse(card.The_statistics.answer_date.getFirst());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            //TODO: add error code
+        }
+        return card_date_temp;
+    }
+
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -170,9 +146,9 @@ public class stage {
     //in java non-primitive objects does not clone by assignment, they point to the same object.
     public LinkedList<vocabulary_card> get_cards() { return cards; }
 
-    public int get_Stage_type(){ return stage_type; }
+    public STAGE_TYPES get_Stage_type(){ return stage_type; }
 
-    public void set_Stage_type(int val){ stage_type = val; }
+    public void set_Stage_type(STAGE_TYPES val){ stage_type = val; }
 
     // not tested yet
     public int get_stage_id(flashcard_collection fc){

@@ -60,6 +60,7 @@ public class StudyActivity extends Activity {
 
     //check box
     private CheckBox checkBox_correct;
+    private CheckBox checkBox_ignore_easy;
 
     //rating bar
     private RatingBar ratingBar_NumCorrect;
@@ -134,6 +135,10 @@ public class StudyActivity extends Activity {
         //check box
         checkBox_correct = (CheckBox) findViewById(R.id.checkBox_correct);
         checkBox_correct.setChecked(false);
+        checkBox_ignore_easy = (CheckBox) findViewById(R.id.checkBox_ignore_easy);
+        checkBox_ignore_easy.setChecked(false);
+
+
 
         //Rating bar, number of times that a card is answered correctly.
         ratingBar_NumCorrect = (RatingBar) findViewById(R.id.ratingBar_NumCorrect);
@@ -269,7 +274,7 @@ public class StudyActivity extends Activity {
         public void onClick(final View v) {
 
             // Before go to next card, move current active card to new stage
-            my_fc_col_temp_ptr.move_active_card_after_review(checkBox_correct.isChecked());
+            my_fc_col_temp_ptr.move_active_card_after_review(checkBox_correct.isChecked(), checkBox_ignore_easy.isChecked());
 
             // Find next card
             vocabulary_card next_card = my_fc_col_temp_ptr.find_next_card_for_review();
@@ -399,6 +404,7 @@ public class StudyActivity extends Activity {
 
         // reset the check-box
         checkBox_correct.setChecked(false);
+        checkBox_ignore_easy.setChecked(false);
 
         //by default, 2nd side of card should be invisible
         textView_side2.setVisibility(TextView.INVISIBLE);

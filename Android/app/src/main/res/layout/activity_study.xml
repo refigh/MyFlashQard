@@ -269,6 +269,13 @@
             android:layout_weight="0.70"
           android:text="پایان آزمون" />
 
+        <CheckBox
+            android:id="@+id/checkBox_ignore_easy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:text="کارت ساده" />
+
 
 
     </TableRow>
