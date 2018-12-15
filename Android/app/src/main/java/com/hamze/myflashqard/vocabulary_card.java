@@ -4,6 +4,9 @@
 
 package com.hamze.myflashqard;
 
+import java.text.ParseException;
+import java.util.Date;
+
 //each individual card is stored is below class.
 public class vocabulary_card {
 
@@ -21,6 +24,7 @@ public class vocabulary_card {
     public String Text_of_antonyms;
     public String Text_of_labels;
     public statistics The_statistics;
+
 
     //----------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------
@@ -40,6 +44,7 @@ public class vocabulary_card {
         Text_of_antonyms = "";
         Text_of_labels = "No label for now!";
         The_statistics = new statistics();
+
     }
 
     //----------------------------------------------------------------------------------------
@@ -70,6 +75,27 @@ public class vocabulary_card {
 
         return -1; // if card is inside the flashcard_collection, never should reach here.
     }
+
+
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+    public Date get_card_answer_date() {
+        Date card_date_temp = null;
+
+        //read card time
+        try {
+            if (The_statistics.answer_date.isEmpty())
+                card_date_temp = mydate.OLD_TIME.getTime();
+            else
+                card_date_temp = mydate.date_format.parse(The_statistics.answer_date.getLast());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            //TODO: add error code
+        }
+        return card_date_temp;
+    }
+
 
 }
 

@@ -5,10 +5,7 @@
 
 package com.hamze.myflashqard;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 
@@ -16,12 +13,6 @@ import java.util.LinkedList;
 public class stage {
 
     private LinkedList<vocabulary_card> cards;
-
-    //date format. used in some date format conversions
-    private SimpleDateFormat date_format;
-
-    //A very old dummy constant time (represents time=-inf)
-    Calendar OLD_TIME;
 
     public enum STAGE_TYPES {
         STACK_STAGE,
@@ -41,11 +32,6 @@ public class stage {
         cards = new LinkedList<vocabulary_card>();
         cards.clear();
 
-        date_format = new SimpleDateFormat("d.M.yyyy");
-
-        //just a very old dummy time (meaning time=-inf)
-        OLD_TIME = Calendar.getInstance();
-        OLD_TIME.set(Calendar.YEAR, 1000); //year=1000(very old)
     }
 
 
@@ -82,8 +68,8 @@ public class stage {
 
         for (int i = 0; i < get_card_count()-1; i++) {
 
-            temp_card1_date = get_card_answer_date(get_cards().get(i));
-            temp_card2_date = get_card_answer_date(get_cards().get(i+1));
+            temp_card1_date = get_cards().get(i).get_card_answer_date();
+            temp_card2_date = get_cards().get(i+1).get_card_answer_date();
 
             if (temp_card1_date.compareTo(temp_card2_date) > 0){
                 sorted = false;
@@ -98,7 +84,7 @@ public class stage {
     public void insert_card_into_sorted_list(vocabulary_card new_card, int sub_list_size) {
 
         //read new card's date
-        Date new_card_date = get_card_answer_date(new_card);
+        Date new_card_date = new_card.get_card_answer_date();
 
         // find right place for new card
         int indx = sub_list_size;
@@ -109,7 +95,7 @@ public class stage {
             if (indx == -1)
                 break;
             else {
-                card_date_temp = get_card_answer_date(get_cards().get(indx));
+                card_date_temp = get_cards().get(indx).get_card_answer_date();
             }
 
         } while (new_card_date.compareTo(card_date_temp) < 0); // same as insertion sort, we stop by an index
@@ -119,21 +105,6 @@ public class stage {
     }
 
 
-    private Date get_card_answer_date(vocabulary_card card) {
-        Date card_date_temp = null;
-
-        //read card time
-        try {
-            if (card.The_statistics.answer_date.isEmpty())
-                card_date_temp = OLD_TIME.getTime();
-            else
-                card_date_temp = date_format.parse(card.The_statistics.answer_date.getLast());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            //TODO: add error code
-        }
-        return card_date_temp;
-    }
 
 
     //----------------------------------------------------------------------------------------

@@ -13,9 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.Stack;
@@ -63,9 +60,6 @@ public class flashcard_collection {
 
     private static final String FOLDER_NAME_ON_STORAGE = "Flashqard";
 
-    //date format. used in some date format conversions
-    private SimpleDateFormat date_format;
-
     //active card (is expected to be shown on the GUI)
     private vocabulary_card active_card;
 
@@ -101,8 +95,6 @@ public class flashcard_collection {
         box_name = "";
         IsOpen = false;
         file_path = "";
-
-        date_format = new SimpleDateFormat("d.M.yyyy");
 
         active_card = null;
 
@@ -523,7 +515,7 @@ public class flashcard_collection {
         else if (mode == 2)
             stg_cnt = 1; //jump over stack
         else
-            return; //wrong code, return without suffle.
+            return; //wrong code, return without shuffle.
 
 
         while ((stage_list[stg_cnt].get_Stage_type() != stage.STAGE_TYPES.INACTIVE_STAGE) && (stg_cnt < MAX_STAGE_NUM)) {
@@ -548,7 +540,7 @@ public class flashcard_collection {
     public boolean Check_integrity() {
 
         //TODO: check all cards inside any stage, except stage 0 & 1, are sorted by last correct answer time.
-
+        //TODO: length of answer_date and answer in statistics should be equal
         //TODO: no card should be in inactive stages.
         return true;
     }// Check_integrity
@@ -656,12 +648,11 @@ public class flashcard_collection {
     // after answering, move the active card (shown on GUI) to proper place.
     public void move_active_card_after_review(boolean is_card_passed, boolean is_card_easy){
 
-
         // in 2 situations there is no active card, before starting the review, and after finishing
         // all cards.
         if (active_card != null) {
 
-            String today_formatted = getToday_formatted(0);
+            String today_formatted = mydate.getToday_formatted(0);
 
             //update date and answer (for now, only info of last card review is stored)
             active_card.The_statistics.answer_date.clear();
@@ -719,7 +710,6 @@ public class flashcard_collection {
     // the reviewing time-tag to be reviewed on tomorrow.
     public void skip_active_card_without_review(){
 
-
         if (active_card != null) {
 
             int cur_stage_id = active_card.get_stage_id_of_card(this);
@@ -728,18 +718,16 @@ public class flashcard_collection {
             int day_offset = -(int) Math.ceil(getMIN_REVIEW_TIME(cur_stage_id)/(24.0 * 60 * 60 * 1000));
             day_offset += 1; // tomorrow
 
-            String date_formatted =  getToday_formatted(day_offset); //"11.11.2017";
+            String date_formatted =  mydate.getToday_formatted(day_offset); //"11.11.2017";
 
             active_card.The_statistics.answer_date.clear();
             active_card.The_statistics.answer_date.add(date_formatted);
             active_card.The_statistics.answer_value.clear();
             active_card.The_statistics.answer_value.add("false"); //"true"
 
-
             // after changing the card's date, remove and re-insert it into same stage.
             stage_list[cur_stage_id].get_cards().remove(active_card);
             stage_list[cur_stage_id].insert_card_into_sorted_list(active_card, stage_list[cur_stage_id].get_card_count());
-
 
             nullify_active_card();
         } //if (active_card != null)
@@ -776,28 +764,14 @@ public class flashcard_collection {
                 continue;
             }
 
-            // head-card is fresh (no date), it is selected.
-            // when head has no date, it is expected to not happen other than start stage (a very fresh card)
-            // but it may happen in other states due to manual card movement (in PC tool)
-            else if (cur_stage.get_cards().getFirst().The_statistics.answer_date.isEmpty() ) {
-                next_card = cur_stage.get_cards().getFirst();
-                break;
-            }
-
-            // head card has date (already reviewed)
+            // there is a valid card
             else {
                 // find time difference between now and head-card
                 // note that, head-card of each stage is the oldest.
-                Date headcard_date = null;
-                try {
-                    headcard_date = date_format.parse(cur_stage.get_cards().getFirst().The_statistics.answer_date.getLast());
-                } catch (ParseException e) {
-                    //TODO: assign new type of error due to time format error
-                    e.printStackTrace();
-                }
+                Date headcard_date = cur_stage.get_cards().getFirst().get_card_answer_date();
 
                 //times in milliseconds
-                long t1 = getToday(0).getTime();
+                long t1 = mydate.getToday(0).getTime();
                 long t2 = headcard_date.getTime();
                 long time_dif_milisec = t1 - t2;
 
@@ -812,12 +786,8 @@ public class flashcard_collection {
                         if (count == cur_stage.get_card_count())
                             break;
                         else
-                            try {
-                                card_date_temp = date_format.parse(cur_stage.get_cards().get(count).The_statistics.answer_date.getLast());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                                //TODO: add error code
-                            }
+                            card_date_temp = cur_stage.get_cards().get(count).get_card_answer_date();
+
                     }while (card_date_temp.compareTo(headcard_date) == 0);
 
                     Random rand = new Random();
@@ -834,42 +804,6 @@ public class flashcard_collection {
         active_card = next_card;
 
         return active_card;
-    }
-
-
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    // Get today (+ day_offset)
-    Date getToday(int day_offset) {
-        //Today
-        Calendar cal = Calendar.getInstance();
-
-        //Today + day_offset
-        cal.add(Calendar.DATE, day_offset);
-
-        //our precision is day.
-        cal.clear(cal.MILLISECOND);
-        cal.clear(cal.SECOND);
-        cal.clear(cal.MINUTE);
-        //cal.clear(cal.HOUR_OF_DAY);
-        //cal.clear(cal.HOUR);
-        cal.set(Calendar.HOUR_OF_DAY, 0); //two above did not work, because they consider GMT time
-
-        Date today = cal.getTime();
-
-        return today;
-    }
-
-
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------
-    // Get today (plus day_offset), with my format
-    String getToday_formatted(int day_offset){
-        Date today = getToday(day_offset);
-        String today_formatted = date_format.format(today);
-        return today_formatted;
     }
 
 
